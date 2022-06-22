@@ -20,6 +20,7 @@ int main(int argc, char* argv[]){
     strcat(con_loc, app_name);
     strcat(con_loc, "/");
 
+    //Create and get directory
     con_dir = opendir(con_loc);
     if(ENOENT == errno){
         //Create configuration directory
@@ -34,6 +35,8 @@ int main(int argc, char* argv[]){
         return_val = -1;
         goto FINAL;
     }
+
+
 
     FINAL:
     free(con_loc);
