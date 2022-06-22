@@ -5,7 +5,7 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -34,7 +34,14 @@ char return_val = 0;
 char *home, *con_loc;
 DIR *con_dir;
 
+void showHelp();
+
 int main(int argc, char* argv[]){
+
+    if(argc==1){
+        showHelp();
+        return 0;
+    }
 
     home = getenv("HOME");
     con_loc = malloc(strlen(home)+strlen("/.config/")+strlen(app_name)+1);
@@ -61,7 +68,13 @@ int main(int argc, char* argv[]){
 
 
 
+
+
     FINAL:
     free(con_loc);
     return return_val;
+}
+
+void showHelp(){
+    //TODO: Help page
 }
