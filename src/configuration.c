@@ -36,9 +36,9 @@
 
 const char *config_file = "config.ini";
 
-char *configDirPath(){
+const char *configDirPath(){
 
-    char *cfg = getenv("XDG_CONFIG_HOME");
+    const char *cfg = getenv("XDG_CONFIG_HOME");
     char *con_loc;
 
     if(cfg){
@@ -57,28 +57,24 @@ char *configDirPath(){
     return con_loc;
 }
 
-int checkConfigDir(){
+const int checkConfigDir(){
 
-    char *con_loc = configDirPath();
+    const char *con_loc = configDirPath();
     DIR *con_dir = opendir(con_loc); //Open directory
     if(ENOENT == errno){
         //Create configuration directory if it doesn't exist
         if(mkdir(con_loc, S_IRWXU)!=0){
             fprintf(stderr, "Error creating configuration directory %s", con_loc);
-            free(con_loc);
             return -1;
         }
-        free(con_dir);
-        free(con_loc);
+        closedir(con_dir);
         return 0;
     }else if(!con_loc){
         fprintf(stderr, "Error accessing configuration directory %s", con_loc);
-        free(con_loc);
         return -1;
     }
 
-    free(con_dir);
-    free(con_loc);
+    closedir(con_dir);
     return 0;
 }
 
@@ -101,12 +97,11 @@ static int inihandler(void *user, const char* section, const char* name, const c
 }
 
 const char *configFilePath(){
-    char *con_loc = configDirPath();
+    const char *con_loc = configDirPath();
     char *con_file = malloc(STRINGLEN(con_loc)+STRINGLEN(config_file));
     strcpy(con_file, con_loc);
     strcat(con_file, config_file);
 
-    free(con_loc);
     return con_file;
 }
 

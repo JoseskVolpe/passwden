@@ -28,6 +28,6 @@ typedef struct INIconf{
     const char* fingerprint;
 } INIconf;
 
-int checkConfigDir();
+const int checkConfigDir();
 void loadConfigFile(struct INIconf * iconf);
 const int updateConfigFile(struct INIconf * iconf);
