@@ -29,6 +29,7 @@
 const INIconf *iconf;
 
 void showHelp();
+void showKeyDefineHelp();
 
 int main(int argc, char* argv[]){
 
@@ -44,11 +45,26 @@ int main(int argc, char* argv[]){
 
     struct INIconf iconf;
     loadConfigFile(&iconf);
-    printf(iconf.fingerprint);
+
+    if(strcmp(argv[1], "--key")==0){
+        switch(argc){
+            case 2: //Show key
+                if(strlen(iconf.fingerprint)==0){
+                    showKeyDefineHelp();
+                    return 0;
+                }
+                printf("Key fingerprint: %s\n", iconf.fingerprint);
+            return 0;
+        }
+    }
 
     return 0;
 }
 
 void showHelp(){
     printf("¡Write a help page here! >w< \n"); //TODO: Help page
+}
+
+void showKeyDefineHelp(){
+    printf("No key fingerprint is defined, to set your key fingerprint, use:\n%s --key <fingerprint>\n", app_name);
 }
