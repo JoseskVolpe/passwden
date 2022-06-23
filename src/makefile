@@ -50,4 +50,4 @@ uninstall:
 	rm -f $(bindir)/passwden
 
 clean:
-	rm *.o *.gch passwden
+	rm -f *.o *.gch passwden
