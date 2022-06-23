@@ -36,8 +36,8 @@ output: $(objects)
 main.o: main.c
 	gcc -c main.c
 
-configuration.o: configuration.c
-	gcc -c configuration.c
+configuration.o: configuration.c configuration.h
+	gcc -c configuration.c configuration.h
 
 install:
 	# Make directories
@@ -50,4 +50,4 @@ uninstall:
 	rm -f $(bindir)/passwden
 
 clean:
-	rm *.o passwden
+	rm *.o *.gch passwden

@@ -27,6 +27,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <sys/stat.h>
+#include "configuration.h"
 
 const char* app_name = "passwden";
 
