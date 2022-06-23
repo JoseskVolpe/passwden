@@ -41,7 +41,7 @@ int main(int argc, char* argv[]){
     if(checkConfigDir()==-1)
         return -1;
 
-    updateConfigFile();
+    loadConfigFile();
 
 
     return 0;

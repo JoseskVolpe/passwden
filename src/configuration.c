@@ -102,7 +102,7 @@ static int inihandler(void *user, const char* section, const char* name, const c
 
 }
 
-void updateConfigFile(){
+void loadConfigFile(){
 
     char *con_loc = configDirPath();
     char *con_file = malloc(strlen(con_loc)+strlen(config_file));

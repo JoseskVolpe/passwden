@@ -25,4 +25,4 @@
 #define app_name "passwden"
 
 int checkConfigDir();
-void updateConfigFile();
+void loadConfigFile();
