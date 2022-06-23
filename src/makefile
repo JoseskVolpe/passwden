@@ -22,7 +22,7 @@
 #
 
 
-objects = main.o
+objects = configuration.o main.o
 
 prefix = $(DESTDIR)/usr
 
@@ -30,11 +30,14 @@ bindir = $(prefix)/bin
 
 all: output
 
-output: main.o
+output: $(objects)
 	gcc $(objects) -o passwden
 
 main.o: main.c
 	gcc -c main.c
+
+configuration.o: configuration.c
+	gcc -c configuration.c
 
 install:
 	# Make directories
