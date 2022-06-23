@@ -38,7 +38,7 @@ void showHelp();
 
 int main(int argc, char* argv[]){
 
-    if(argc==1){
+    if(argc==1 || strcmp(argv[1], "--help")==0){
         showHelp();
         return 0;
     }
@@ -76,5 +76,5 @@ int main(int argc, char* argv[]){
 }
 
 void showHelp(){
-    //TODO: Help page
+    printf("¡Write a help page here! >w< \n"); //TODO: Help page
 }
