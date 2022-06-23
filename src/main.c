@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include "configuration.h"
 
+const INIconf *iconf;
 
 void showHelp();
 
@@ -41,8 +42,9 @@ int main(int argc, char* argv[]){
     if(checkConfigDir()==-1)
         return -1;
 
-    loadConfigFile();
-
+    struct INIconf iconf;
+    loadConfigFile(&iconf);
+    printf(iconf.fingerprint);
 
     return 0;
 }

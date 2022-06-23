@@ -24,5 +24,9 @@
 
 #define app_name "passwden"
 
+typedef struct INIconf{
+    const char* fingerprint;
+} INIconf;
+
 int checkConfigDir();
-void loadConfigFile();
+void loadConfigFile(struct INIconf * iconf);

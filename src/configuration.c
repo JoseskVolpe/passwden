@@ -34,10 +34,6 @@
 
 const char *config_file = "config.ini";
 
-typedef struct{
-    const char* fingerprint;
-}iniconf;
-
 char *configDirPath(){
 
     char *cfg = getenv("XDG_CONFIG_HOME");
@@ -85,7 +81,7 @@ int checkConfigDir(){
 }
 
 static int inihandler(void *user, const char* section, const char* name, const char* value){
-    iniconf* iconf = (iniconf*) user;
+    struct INIconf* iconf = (struct INIconf*) user;
 
     #define MATCH(s,n) strcmp(section, s) == 0 && strcmp(name, n) == 0
     if(MATCH("key", "fingerprint")){
@@ -102,18 +98,14 @@ static int inihandler(void *user, const char* section, const char* name, const c
 
 }
 
-void loadConfigFile(){
+void loadConfigFile(struct INIconf * iconf){
 
     char *con_loc = configDirPath();
     char *con_file = malloc(strlen(con_loc)+strlen(config_file));
     strcpy(con_file, con_loc);
     strcat(con_file, config_file);
 
-    iniconf iconf;
-
-    ini_parse(con_file, inihandler, &iconf);
-
-    printf("%s", iconf.fingerprint);
+    ini_parse(con_file, inihandler, iconf);
 
     free(con_loc);
     free(con_file);
