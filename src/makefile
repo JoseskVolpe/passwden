@@ -22,7 +22,7 @@
 #
 
 
-objects = configuration.o main.o
+objects = message.o configuration.o main.o
 
 prefix = $(DESTDIR)/usr
 bindir = $(prefix)/bin
@@ -37,6 +37,9 @@ main.o: main.c
 
 configuration.o: configuration.c configuration.h
 	gcc -c configuration.c configuration.h
+
+message.o: message.c message.h
+	gcc -c message.c message.h
 
 install:
 	# Make directories

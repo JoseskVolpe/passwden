@@ -22,6 +22,7 @@
  */
 
 #include "configuration.h"
+#include "message.h"
 #include <stdlib.h>
 #include <dirent.h>
 #include <ini.h>
@@ -30,7 +31,7 @@
 #include <errno.h>
 #include <string.h>
 
-#define INVALID_FINGERPRINT_MESSAGE "Invalid fingerprint, value must have 16 characters\n"
+
 #define STRINGLEN(s) strlen(s)*sizeof(char)
 
 const char *config_file = "config.ini";
