@@ -56,6 +56,8 @@ int main(int argc, char* argv[]){
                 printf("Key fingerprint: %s\n", iconf.fingerprint);
             return 0;
             case 3:
+                struct INIconf newiconf;
+                copyINIConfig(&newiconf, &iconf);
 
             return 0;
             default:

@@ -112,3 +112,15 @@ void loadConfigFile(struct INIconf * iconf){
     free(con_file);
 
 }
+
+void copyINIConfig(struct INIconf * dest, const struct INIconf * src){
+
+    dest->fingerprint = strdup(src->fingerprint);
+
+}
+
+const int updateConfigFile(struct INIconf * iconf){
+
+
+
+}

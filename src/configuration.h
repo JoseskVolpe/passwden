@@ -30,3 +30,5 @@ typedef struct INIconf{
 
 int checkConfigDir();
 void loadConfigFile(struct INIconf * iconf);
+void copyINIConfig(struct INIconf * dest, const struct INIconf * src);
+const int updateConfigFile(struct INIconf * iconf);
