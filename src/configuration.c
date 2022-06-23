@@ -120,6 +120,18 @@ void loadConfigFile(struct INIconf * iconf){
 
 const int updateConfigFile(struct INIconf * iconf){
 
+    FILE *fd = fopen(configFilePath(), "w+");
 
+    fprintf(fd,
+
+        "[key]\n"
+        "fingerprint=%s\n"
+        ,
+        iconf->fingerprint
+    );
+
+    fclose(fd);
+
+    return 0;
 
 }
