@@ -23,4 +23,7 @@
 
 #include <dirent.h>
 
-void updateConfigFile(DIR *configdir);
+static const char *app_name = "passwden";
+
+int checkConfigDir();
+void updateConfigFile();
