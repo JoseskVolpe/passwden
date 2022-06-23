@@ -63,8 +63,8 @@ int main(int argc, char* argv[]){
                     return -1;
                 }
 
-                struct INIconf newiconf;
-                copyINIConfig(&newiconf, &iconf);
+                iconf.fingerprint = strdup(argv[2]);
+                updateConfigFile(&iconf);
             return 0;
             default:
                 printf("Invalid arguments: ");
