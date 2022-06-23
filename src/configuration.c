@@ -31,6 +31,7 @@
 #include <string.h>
 
 #define INVALID_FINGERPRINT_MESSAGE "Invalid fingerprint, value must have 16 characters\n"
+#define STRINGLEN(s) strlen(s)*sizeof(char)
 
 const char *config_file = "config.ini";
 
@@ -40,12 +41,12 @@ char *configDirPath(){
     char *con_loc;
 
     if(cfg){
-        con_loc = malloc(strlen(cfg)+strlen(app_name)+2);
+        con_loc = malloc(STRINGLEN(cfg)+STRINGLEN(app_name)+2);
         strcpy(con_loc, cfg);
         strcat(con_loc, "/");
     }else{
         const char *home = getenv("HOME");
-        con_loc = malloc(strlen(home)+strlen("/.config/")+strlen(app_name)+1);
+        con_loc = malloc(STRINGLEN(home)+STRINGLEN("/.config/")+STRINGLEN(app_name)+1);
         strcpy(con_loc, home);
         strcat(con_loc, "/.config/");
     }
@@ -101,7 +102,7 @@ static int inihandler(void *user, const char* section, const char* name, const c
 void loadConfigFile(struct INIconf * iconf){
 
     char *con_loc = configDirPath();
-    char *con_file = malloc(strlen(con_loc)+strlen(config_file));
+    char *con_file = malloc(STRINGLEN(con_loc)+STRINGLEN(config_file));
     strcpy(con_file, con_loc);
     strcat(con_file, config_file);
 
