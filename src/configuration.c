@@ -31,7 +31,7 @@
 #include <string.h>
 
 char *configDirPath(){
-    char *home = getenv("HOME");
+    const char *home = getenv("HOME");
     char *con_loc = malloc(strlen(home)+strlen("/.config/")+strlen(app_name)+1);
     strcpy(con_loc, home);
     strcat(con_loc, "/.config/");
