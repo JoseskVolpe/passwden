@@ -22,7 +22,7 @@
  */
 
 
-static const char *app_name = "passwden";
+#define app_name "passwden"
 
 int checkConfigDir();
 void updateConfigFile();
