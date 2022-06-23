@@ -89,7 +89,7 @@ static int inihandler(void *user, const char* section, const char* name, const c
     if(MATCH("key", "fingerprint")){
         if(strlen(value)!=16 && strlen(value)!=0){
             fprintf(stderr, INVALID_FINGERPRINT_MESSAGE);
-            return 0;
+            exit(-1);
         }
         iconf -> fingerprint = strdup(value);
     }else{
