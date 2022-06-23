@@ -55,6 +55,17 @@ int main(int argc, char* argv[]){
                 }
                 printf("Key fingerprint: %s\n", iconf.fingerprint);
             return 0;
+            case 3:
+
+            return 0;
+            default:
+                printf("Invalid arguments: ");
+                int i;
+                for(i=3; i<argc; i++)
+                    printf("%s ", argv[i]);
+                printf("\n");
+            return -1;
+
         }
     }
 
