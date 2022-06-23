@@ -31,10 +31,21 @@
 #include <string.h>
 
 char *configDirPath(){
-    const char *home = getenv("HOME");
-    char *con_loc = malloc(strlen(home)+strlen("/.config/")+strlen(app_name)+1);
-    strcpy(con_loc, home);
-    strcat(con_loc, "/.config/");
+
+    char *cfg = getenv("XDG_CONFIG_HOME");
+    char *con_loc;
+
+    if(cfg){
+        con_loc = malloc(strlen(cfg)+strlen(app_name)+2);
+        strcpy(con_loc, cfg);
+        strcat(con_loc, "/");
+    }else{
+        const char *home = getenv("HOME");
+        con_loc = malloc(strlen(home)+strlen("/.config/")+strlen(app_name)+1);
+        strcpy(con_loc, home);
+        strcat(con_loc, "/.config/");
+    }
+
     strcat(con_loc, app_name);
     strcat(con_loc, "/");
     return con_loc;
