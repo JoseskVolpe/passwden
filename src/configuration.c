@@ -30,10 +30,11 @@
 #include <errno.h>
 #include <string.h>
 
+#define INVALID_FINGERPRINT_MESSAGE "Invalid fingerprint, value must have 16 characters\n"
+
 const char *config_file = "config.ini";
 
 typedef struct{
-    int version;
     const char* fingerprint;
 }iniconf;
 
@@ -86,7 +87,16 @@ int checkConfigDir(){
 static int inihandler(void *user, const char* section, const char* name, const char* value){
     iniconf* iconf = (iniconf*) user;
 
-    printf("[%s] %s = %s\n", section, name, value);
+    #define MATCH(s,n) strcmp(section, s) == 0 && strcmp(name, n) == 0
+    if(MATCH("key", "fingerprint")){
+        if(strlen(value)!=16){
+            fprintf(stderr, INVALID_FINGERPRINT_MESSAGE);
+            return 0;
+        }
+        iconf -> fingerprint = strdup(value);
+    }else{
+        return 0;
+    }
 
     return 1;
 
@@ -102,6 +112,8 @@ void updateConfigFile(){
     iniconf iconf;
 
     ini_parse(con_file, inihandler, &iconf);
+
+    printf("%s", iconf.fingerprint);
 
     free(con_loc);
     free(con_file);
