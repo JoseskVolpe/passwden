@@ -21,4 +21,4 @@
  *
  */
 
- #define INVALID_FINGERPRINT_MESSAGE "Invalid fingerprint, value must have 16 characters\n"
+ #define INVALID_FINGERPRINT_LENGTH_MESSAGE "Invalid fingerprint, value must have 16 characters\n"

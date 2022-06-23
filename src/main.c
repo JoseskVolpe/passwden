@@ -59,7 +59,7 @@ int main(int argc, char* argv[]){
             case 3:
 
                 if(strlen(argv[2])!=16){
-                    fprintf(stderr, INVALID_FINGERPRINT_MESSAGE);
+                    fprintf(stderr, INVALID_FINGERPRINT_LENGTH_MESSAGE);
                     return -1;
                 }
 
