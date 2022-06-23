@@ -100,17 +100,21 @@ static int inihandler(void *user, const char* section, const char* name, const c
 
 }
 
-void loadConfigFile(struct INIconf * iconf){
-
+const char *configFilePath(){
     char *con_loc = configDirPath();
     char *con_file = malloc(STRINGLEN(con_loc)+STRINGLEN(config_file));
     strcpy(con_file, con_loc);
     strcat(con_file, config_file);
 
-    ini_parse(con_file, inihandler, iconf);
-
     free(con_loc);
-    free(con_file);
+    return con_file;
+}
+
+void loadConfigFile(struct INIconf * iconf){
+
+    const char *con_file = configFilePath();
+
+    ini_parse(con_file, inihandler, iconf);
 
 }
 
