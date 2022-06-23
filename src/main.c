@@ -71,6 +71,7 @@ int main(int argc, char* argv[]){
 
 
     FINAL:
+    if(con_dir!=NULL) free(con_dir);
     free(con_loc);
     return return_val;
 }
