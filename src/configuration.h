@@ -21,7 +21,6 @@
  *
  */
 
-#include <dirent.h>
 
 static const char *app_name = "passwden";
 
