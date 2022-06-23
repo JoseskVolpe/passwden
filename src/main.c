@@ -21,6 +21,7 @@
  *
  */
 
+#include "message.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -56,9 +57,14 @@ int main(int argc, char* argv[]){
                 printf("Key fingerprint: %s\n", iconf.fingerprint);
             return 0;
             case 3:
+
+                if(strlen(argv[2])!=16){
+                    fprintf(stderr, INVALID_FINGERPRINT_MESSAGE);
+                    return -1;
+                }
+
                 struct INIconf newiconf;
                 copyINIConfig(&newiconf, &iconf);
-
             return 0;
             default:
                 printf("Invalid arguments: ");
