@@ -27,10 +27,11 @@
 #include <stdio.h>
 #include "configuration.h"
 
-const INIconf *iconf;
+INIconf iconf;
 
 void showHelp();
 void showKeyDefineHelp();
+const int checkArguments(int argc, char* argv[]);
 
 int main(int argc, char* argv[]){
 
@@ -39,23 +40,34 @@ int main(int argc, char* argv[]){
         return 0;
     }
 
-
-
     if(checkConfigDir()==-1)
         return -1;
 
-    struct INIconf iconf;
     loadConfigFile(&iconf);
 
+    return checkArguments(argc, argv);
+}
+
+const int keyArgument(int argc, char* argv[]);
+const int checkArguments(int argc, char* argv[]){
     if(strcmp(argv[1], "--key")==0){
-        switch(argc){
+        return keyArgument(argc, argv);
+    }
+
+    return 0;
+}
+
+const int keyArgument(int argc, char* argv[]){
+    switch(argc){
             case 2: //Show key
+
                 if(strlen(iconf.fingerprint)==0){
                     showKeyDefineHelp();
                     return 0;
                 }
                 printf("Key fingerprint: %s\n", iconf.fingerprint);
-            return 0;
+                return 0;
+
             case 3:
 
                 if(strlen(argv[2])!=16){
@@ -65,19 +77,20 @@ int main(int argc, char* argv[]){
 
                 iconf.fingerprint = strdup(argv[2]);
                 updateConfigFile(&iconf);
-            return 0;
+                return 0;
+
             default:
+
                 printf("Invalid arguments: ");
+
                 int i;
                 for(i=3; i<argc; i++)
                     printf("%s ", argv[i]);
+
                 printf("\n");
-            return -1;
+                return -1;
 
-        }
     }
-
-    return 0;
 }
 
 void showHelp(){
