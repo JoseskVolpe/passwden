@@ -30,6 +30,13 @@
 #include <errno.h>
 #include <string.h>
 
+const char *config_file = "config.ini";
+
+typedef struct{
+    int version;
+    const char* fingerprint;
+}iniconf;
+
 char *configDirPath(){
 
     char *cfg = getenv("XDG_CONFIG_HOME");
@@ -76,8 +83,27 @@ int checkConfigDir(){
     return 0;
 }
 
+static int inihandler(void *user, const char* section, const char* name, const char* value){
+    iniconf* iconf = (iniconf*) user;
+
+    printf("[%s] %s = %s\n", section, name, value);
+
+    return 1;
+
+}
+
 void updateConfigFile(){
 
+    char *con_loc = configDirPath();
+    char *con_file = malloc(strlen(con_loc)+strlen(config_file));
+    strcpy(con_file, con_loc);
+    strcat(con_file, config_file);
 
+    iniconf iconf;
+
+    ini_parse(con_file, inihandler, &iconf);
+
+    free(con_loc);
+    free(con_file);
 
 }

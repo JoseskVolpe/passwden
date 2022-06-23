@@ -25,13 +25,12 @@
 objects = configuration.o main.o
 
 prefix = $(DESTDIR)/usr
-
 bindir = $(prefix)/bin
 
 all: output
 
 output: $(objects)
-	gcc $(objects) -o passwden
+	gcc $(objects) -o passwden -linih
 
 main.o: main.c
 	gcc -c main.c
