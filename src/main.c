@@ -85,6 +85,9 @@ const int keyArgument(int argc, char* argv[]){
                     return -1;
                 }
 
+                //FIXME: Check if fingerprint has a private key
+                printf("FIXME: Program must check if fingerprint is a private key\n");
+
                 iconf.fingerprint = strdup(argv[2]); //TODO: Reencrypt passwords JSON
                 updateConfigFile(&iconf);
                 return 0;
