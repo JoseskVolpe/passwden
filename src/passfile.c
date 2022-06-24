@@ -56,6 +56,32 @@ const struct json_object * get_passwords(const char * fingerprint){
     return jobj;
 }
 
+const int update_passwords(struct json_object *jobj, const char * fingerprint){
+    const char *passfilepath = getPassFilePath();
+
+    FILE *f, *bk;
+    char *bk_path = malloc(STRINGLEN(passfilepath)+STRINGLEN(".bk"));
+    strcpy(bk_path, passfilepath);
+    strcat(bk_path, ".bk");
+
+    if((f = fopen(passfilepath, "rw")) != NULL ){ //Backup
+        bk = fopen(bk_path, "w");
+
+        char c;
+        while((c = fgetc(f)) != EOF )
+            fputc(c, bk);
+
+        fclose(bk);
+        fclose(f);
+        f = fopen(passfilepath, "w");
+    }
+
+    fprintf(f, encrypt(json_object_get_string(jobj), fingerprint));
+    fclose(f);
+
+    return 0;
+
+}
 
 const char * getPassFilePath(){
     const char *dir_path = configDirPath();

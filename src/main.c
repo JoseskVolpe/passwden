@@ -127,9 +127,7 @@ const int addPassword(int argc, char* argv[]){
     json_object_object_add(passobj, "password", secj);
     json_object_object_add(wjobj, login, passobj);
 
-    printf("%s\n",json_object_get_string(jobj));
-
-    return 0;
+    return update_passwords(jobj, iconf.fingerprint);
 }
 
 const char * askNewPassword(){

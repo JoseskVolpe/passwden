@@ -24,3 +24,4 @@
 #include <json-c/json.h>
 
 const struct json_object * get_passwords(const char * fingerprint);
+const int update_passwords(struct json_object *jobj, const char *fingerprint);
