@@ -42,13 +42,12 @@ const struct json_object * get_passwords(const char * fingerprint){
     //Read file
     char *buffer;
     FILE *fd = fopen(passfilepath, "r");
-    if(fd==NULL){
-        fprintf(stderr, "Couldn't open password database! \n");
-        exit(-1);
-    }
+
     buffer=malloc(BUFFERSIZE*sizeof(char));
-    fread(buffer, BUFFERSIZE, 1, fd);
-    fclose(fd);
+    if(fd!=NULL) {
+        fread(buffer, BUFFERSIZE, 1, fd);
+        fclose(fd);
+    }
 
     const char * bufferd = decrypt(buffer);
     const struct json_object *jobj = json_tokener_parse(bufferd);
