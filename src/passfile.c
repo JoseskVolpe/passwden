@@ -42,14 +42,18 @@ const struct json_object * get_passwords(const char * fingerprint){
     char *buffer;
     FILE *fd = fopen(passfilepath, "r");
 
+    const struct json_object *jobj;
+
     buffer=malloc(BUFFERSIZE*sizeof(char));
     if(fd!=NULL) {
         fread(buffer, BUFFERSIZE, 1, fd);
         fclose(fd);
-    }
 
-    const char * bufferd = decrypt(buffer, fingerprint);
-    const struct json_object *jobj = json_tokener_parse(bufferd);
+        const char * bufferd = decrypt(buffer, fingerprint);
+        jobj = json_tokener_parse(bufferd);
+    }else{
+        jobj = json_object_new_object();
+    }
 
     free(buffer);
 
@@ -73,6 +77,8 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
 
         fclose(bk);
         fclose(f);
+        f = fopen(passfilepath, "w");
+    }else{
         f = fopen(passfilepath, "w");
     }
 
