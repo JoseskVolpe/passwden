@@ -21,6 +21,7 @@
  *
  */
 
+#include <unistd.h>
 #include "message.h"
 #include <stdlib.h>
 #include <string.h>
@@ -35,6 +36,7 @@ const int invalidArguments(int argc, char *argv[], int index);
 void showHelp();
 void showKeyDefineHelp();
 const int checkArguments(int argc, char* argv[]);
+const char * askNewPassword();
 
 int main(int argc, char* argv[]){
 
@@ -101,10 +103,46 @@ const int displayPassword(int argc, char* argv[]){
     return 0;
 }
 
+const int addPassword(int argc, char* argv[]){
+
+    const char *website, *login, *sec;
+
+    printf("Website name: ");
+    scanf("%s", &website);
+    printf("Login: ");
+    scanf("%s", &login);
+
+    sec = askNewPassword();
+
+    return 0;
+}
+
+const char * askNewPassword(){
+
+    char *sec, *sec2;
+
+    INSERT_PASSWORD:
+    sec = strdup(getpass("Password: "));
+    if(strlen(sec)<6){
+        fprintf(stderr, "Password or PIN must have at-least 6 characters\n");
+        goto INSERT_PASSWORD;
+    }
+    sec2 = getpass("Confirm password: ");
+    if(strcmp(sec, sec2)!=0){
+        fprintf(stderr, "Passwords mismatch, try again\n");
+        goto INSERT_PASSWORD;
+    }
+    free(sec);
+    return sec2;
+}
+
 const int keyArgument(int argc, char* argv[]);
 const int checkArguments(int argc, char* argv[]){
     if(strcmp(argv[1], "--key")==0){
         return keyArgument(argc, argv);
+    }
+    if(strcmp(argv[1], "--add")==0){
+        return addPassword(argc, argv);
     }
 
     return displayPassword(argc, argv);
