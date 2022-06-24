@@ -60,9 +60,11 @@ const struct json_object * get_passwords(const char * fingerprint){
 }
 
 const char * decrypt(const char * src, const char * fingerprint){
+    printf("WARNING: decrypt() not yet implemented!\n");
     return src; //TODO: Encryption and decryption
 }
 
 const char * encrypt(const char * src, const char * fingerprint){
+    printf("WARNING: encrypt() not yet implemented!\n");
     return src; //TODO: Encryption and decryption
 }
