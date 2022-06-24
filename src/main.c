@@ -105,14 +105,29 @@ const int displayPassword(int argc, char* argv[]){
 
 const int addPassword(int argc, char* argv[]){
 
-    const char *website, *login, *sec;
+    const char website[120], login[120], *sec;
+
+    struct json_object *jobj = get_passwords(iconf.fingerprint);
 
     printf("Website name: ");
-    scanf("%s", &website);
+    scanf("%s", website);
     printf("Login: ");
-    scanf("%s", &login);
+    scanf("%s", login);
 
     sec = askNewPassword();
+
+    struct json_object *wjobj, *ljobj, *passobj, *secj;
+    if(!json_object_object_get_ex(jobj, website, &wjobj)){
+        wjobj = json_object_new_object();
+        json_object_object_add(jobj, website, wjobj);
+    }
+
+    secj = json_object_new_string(sec);
+    passobj = json_object_new_object();
+    json_object_object_add(passobj, "password", secj);
+    json_object_object_add(wjobj, login, passobj);
+
+    printf("%s\n",json_object_get_string(jobj));
 
     return 0;
 }
