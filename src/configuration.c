@@ -42,12 +42,12 @@ const char *configDirPath(){
     char *con_loc;
 
     if(cfg){
-        con_loc = malloc(STRINGLEN(cfg)+STRINGLEN(app_name)+2);
+        con_loc = malloc(STRINGLEN(cfg)+STRINGLEN(app_name)+sizeof(char)*2);
         strcpy(con_loc, cfg);
         strcat(con_loc, "/");
     }else{
         const char *home = getenv("HOME");
-        con_loc = malloc(STRINGLEN(home)+STRINGLEN("/.config/")+STRINGLEN(app_name)+1);
+        con_loc = malloc(STRINGLEN(home)+STRINGLEN("/.config/")+STRINGLEN(app_name)+sizeof(char));
         strcpy(con_loc, home);
         strcat(con_loc, "/.config/");
     }
