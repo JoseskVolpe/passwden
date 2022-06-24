@@ -85,7 +85,7 @@ const int keyArgument(int argc, char* argv[]){
                     return -1;
                 }
 
-                iconf.fingerprint = strdup(argv[2]);
+                iconf.fingerprint = strdup(argv[2]); //TODO: Reencrypt passwords JSON
                 updateConfigFile(&iconf);
                 return 0;
 
