@@ -52,8 +52,48 @@ int main(int argc, char* argv[]){
 
 const int displayPassword(int argc, char* argv[]){
 
+    char * website = argv[1];
+    const char * loginName = NULL, * sec;
+
+    if(argc==3)
+        loginName = argv[2];
+
     struct json_object *jobj = get_passwords(iconf.fingerprint);
-    printf("jobj from str:\n---\n%s\n---\n", json_object_to_json_string_ext(jobj, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY));
+    struct json_object *wjobj;
+    if(!json_object_object_get_ex(jobj, website, &wjobj)){
+        fprintf(stderr, "Website not registered\n");
+        return -1;
+    }
+
+
+    struct json_object *ljobj, *passobj;
+
+    //TODO: Display passwords in 'less', for security reasons. Terminal must NOT keep passwords in history
+    if(loginName==NULL){
+        struct json_object_iterator jit, jitEnd;
+        jit = json_object_iter_begin(wjobj);
+        jitEnd = json_object_iter_end(wjobj);
+
+        while (!json_object_iter_equal(&jit, &jitEnd)) {
+
+            loginName = json_object_iter_peek_name(&jit);
+            ljobj = json_object_iter_peek_value(&jit);
+            json_object_object_get_ex(ljobj, "password", &passobj);
+            sec = json_object_get_string(passobj);
+
+            printf("%s: %s\n",loginName, sec);
+            json_object_iter_next(&jit);
+        }
+    }else{
+        if(!json_object_object_get_ex(wjobj, loginName, &ljobj)){
+            fprintf(stderr, "%s was not registered on %s\n", loginName, website);
+            return -1;
+        }
+
+        json_object_object_get_ex(ljobj, "password", &passobj);
+        sec = json_object_get_string(passobj);
+        printf("%s: %s\n",loginName, sec);
+    }
 
     return 0;
 }
