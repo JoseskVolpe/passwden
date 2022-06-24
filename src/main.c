@@ -56,7 +56,9 @@ const int displayPassword(int argc, char* argv[]){
     char * website = argv[1];
     const char * loginName = NULL, * sec;
 
-    if(argc==3)
+    if(argc>3){
+        return invalidArguments(argc, argv, 3);
+    }else if(argc==3)
         loginName = argv[2];
 
     struct json_object *jobj = get_passwords(iconf.fingerprint);
