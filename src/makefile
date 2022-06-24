@@ -22,7 +22,7 @@
 #
 
 
-objects = message.o configuration.o main.o
+objects = passfile.o message.o configuration.o main.o
 
 prefix = $(DESTDIR)/usr
 bindir = $(prefix)/bin
@@ -30,7 +30,7 @@ bindir = $(prefix)/bin
 all: output
 
 output: $(objects)
-	gcc $(objects) -o passwden -linih
+	gcc $(objects) -o passwden -linih -ljson-c -lgcrypt
 
 main.o: main.c
 	gcc -c main.c
@@ -40,6 +40,9 @@ configuration.o: configuration.c configuration.h
 
 message.o: message.c message.h
 	gcc -c message.c message.h
+
+passfile.o: passfile.c passfile.h
+	gcc -c passfile.c passfile.h
 
 install:
 	# Make directories

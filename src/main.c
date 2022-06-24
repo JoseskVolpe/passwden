@@ -25,7 +25,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <json-c/json.h>
 #include "configuration.h"
+#include "passfile.h"
 
 INIconf iconf;
 
@@ -48,13 +50,21 @@ int main(int argc, char* argv[]){
     return checkArguments(argc, argv);
 }
 
+const int displayPassword(int argc, char* argv[]){
+
+    struct json_object *jobj = get_passwords(iconf.fingerprint);
+    printf("jobj from str:\n---\n%s\n---\n", json_object_to_json_string_ext(jobj, JSON_C_TO_STRING_SPACED | JSON_C_TO_STRING_PRETTY));
+
+    return 0;
+}
+
 const int keyArgument(int argc, char* argv[]);
 const int checkArguments(int argc, char* argv[]){
     if(strcmp(argv[1], "--key")==0){
         return keyArgument(argc, argv);
     }
 
-    return 0;
+    return displayPassword(argc, argv);
 }
 
 const int keyArgument(int argc, char* argv[]){
