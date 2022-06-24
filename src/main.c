@@ -31,6 +31,7 @@
 
 INIconf iconf;
 
+const int invalidArguments(int argc, char *argv[], int index);
 void showHelp();
 void showKeyDefineHelp();
 const int checkArguments(int argc, char* argv[]);
@@ -133,15 +134,7 @@ const int keyArgument(int argc, char* argv[]){
                 return 0;
 
             default:
-
-                printf("Invalid arguments: ");
-
-                int i;
-                for(i=3; i<argc; i++)
-                    printf("%s ", argv[i]);
-
-                printf("\n");
-                return -1;
+                return invalidArguments(argc, argv, 3);
 
     }
 }
@@ -152,4 +145,15 @@ void showHelp(){
 
 void showKeyDefineHelp(){
     printf("No key fingerprint is defined, to set your key fingerprint, use:\n%s --key <fingerprint>\n", app_name);
+}
+
+const int invalidArguments(int argc, char* argv[], int index){
+    printf("Invalid arguments: ");
+
+    int i;
+    for(i=index; i<argc; i++)
+        printf("%s ", argv[i]);
+
+    printf("\n");
+    return -1;
 }
