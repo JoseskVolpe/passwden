@@ -23,6 +23,7 @@
 
 
 objects = passfile.o message.o configuration.o main.o
+cflags = json-c
 
 prefix = $(DESTDIR)/usr
 bindir = $(prefix)/bin
@@ -30,7 +31,7 @@ bindir = $(prefix)/bin
 all: output
 
 output: $(objects)
-	gcc $(objects) -o passwden -linih -ljson-c -lgcrypt
+	gcc $(objects) `pkg-config --cflags $(cflags)` -o passwden -linih -ljson-c -lgcrypt
 
 main.o: main.c
 	gcc -c main.c
