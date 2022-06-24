@@ -30,7 +30,8 @@
 #define PASSFILENAME "passwords.gpg"
 #define BUFFERSIZE 9000
 
-const char * decrypt(char * src);
+const char * decrypt(const char * src, const char * fingerprint);
+const char * encrypt(const char * src, const char * fingerprint);
 
 const struct json_object * get_passwords(const char * fingerprint){
     const char *dir_path = configDirPath();
@@ -49,7 +50,7 @@ const struct json_object * get_passwords(const char * fingerprint){
         fclose(fd);
     }
 
-    const char * bufferd = decrypt(buffer);
+    const char * bufferd = decrypt(buffer, fingerprint);
     const struct json_object *jobj = json_tokener_parse(bufferd);
 
     free(passfilepath);
@@ -58,6 +59,10 @@ const struct json_object * get_passwords(const char * fingerprint){
     return jobj;
 }
 
-const char * decrypt(char * src){
+const char * decrypt(const char * src, const char * fingerprint){
+    return src; //TODO: Encryption and decryption
+}
+
+const char * encrypt(const char * src, const char * fingerprint){
     return src; //TODO: Encryption and decryption
 }
