@@ -103,7 +103,7 @@ const int displayPassword(int argc, char* argv[]){
     return 0;
 }
 
-const int addPassword(int argc, char* argv[]){
+const int setAccount(int argc, char* argv[]){
 
     const char website[120], login[120], *sec;
 
@@ -154,8 +154,8 @@ const int checkArguments(int argc, char* argv[]){
     if(strcmp(argv[1], "--key")==0){
         return keyArgument(argc, argv);
     }
-    if(strcmp(argv[1], "--add")==0){
-        return addPassword(argc, argv);
+    if(strcmp(argv[1], "--set")==0){
+        return setAccount(argc, argv);
     }
 
     return displayPassword(argc, argv);
