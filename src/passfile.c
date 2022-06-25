@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <json-c/json.h>
+#include <sys/stat.h>
 #include <gcrypt.h>
 #include "configuration.h"
 
@@ -77,6 +78,7 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
 
         fclose(bk);
         fclose(f);
+        chmod(bk_path, strtol("0600", 0, 8));
         f = fopen(passfilepath, "w");
     }else{
         f = fopen(passfilepath, "w");
@@ -84,6 +86,7 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
 
     fprintf(f, encrypt(json_object_get_string(jobj), fingerprint));
     fclose(f);
+    chmod(passfilepath, strtol("0600", 0, 8));
 
     return 0;
 

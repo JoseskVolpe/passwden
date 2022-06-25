@@ -115,7 +115,11 @@ void loadConfigFile(struct INIconf * iconf){
 
 const int updateConfigFile(struct INIconf * iconf){
 
-    FILE *fd = fopen(configFilePath(), "w+");
+    /* Check if fingerprint is valid */
+
+    const char * fp;
+
+    FILE *fd = fopen((fp=configFilePath()), "w+");
 
     fprintf(fd,
 
@@ -126,6 +130,7 @@ const int updateConfigFile(struct INIconf * iconf){
     );
 
     fclose(fd);
+    chmod(fp, strtol("0600", 0, 8));
 
     return 0;
 
