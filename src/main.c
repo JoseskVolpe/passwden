@@ -21,6 +21,7 @@
  *
  */
 
+#include <zconf.h>
 #include <termios.h>
 #include "message.h"
 #include <stdlib.h>
@@ -44,6 +45,15 @@ const int checkArguments(int argc, char* argv[]);
 const char * askNewPassword();
 
 int main(int argc, char* argv[]){
+
+    uid_t uid=getuid(), euid=geteuid();
+    if(uid==0){
+        fprintf(stderr,"DO NOT RUN THIS PROGRAM AS ROOT. Execution blocked for security reasons!\n");
+        return -1;
+    }else if (uid<0 || uid!=euid) {
+        fprintf(stderr, "Only the original user is allowed to check their passwords. Execution blocked for security reasons!\n");
+        return -1;
+    }
 
     if(argc==1 || strcmp(argv[1], "--help")==0 || strcmp(argv[1], "-h")==0){
         showHelp();
@@ -285,7 +295,7 @@ const int list(int argc, char* argv[]){
 }
 
 /* Slighty copied from GNU. I've took so much time figuring out this so yiff off*/
-ssize_t getpass (char* message, char **lineptr)
+ssize_t my_getpass (char* message, char **lineptr)
 {
     struct termios old, new;
     int nread;
@@ -319,14 +329,14 @@ const char * askNewPassword(){
     char *sec, *sec2;
 
     INSERT_PASSWORD:
-    if(getpass("Password: ", &sec)<0)
+    if(my_getpass("Password: ", &sec)<0)
         exit(-1);
     if(strlen(sec)<6){
         fprintf(stderr, "Password or PIN must have at-least 6 characters\n");
         goto INSERT_PASSWORD;
     }
 
-    if(getpass("Confirm password: ", &sec2)<0)
+    if(my_getpass("Confirm password: ", &sec2)<0)
         exit(-1);
     if(strcmp(sec, sec2)!=0){
         fprintf(stderr, "Passwords mismatch, try again\n");
