@@ -148,6 +148,53 @@ const int setAccount(int argc, char* argv[]){
     return update_passwords(jobj, iconf.fingerprint);
 }
 
+const int list(int argc, char* argv[]){
+
+    const char *website = NULL;
+    if(argc==3)
+        website = argv[2];
+    else if(argc>3)
+        return invalidArguments(argc, argv, 3);
+
+    struct json_object *jweb, *jlogin;
+    struct json_object *jobj = get_passwords(iconf.fingerprint);
+    struct json_object_iterator jidw, jidwEnd, jidl, jidlEnd;
+
+    if(website!=NULL){
+        if(!json_object_object_get_ex(jobj, website, &jweb)){
+            fprintf(stderr, "Website not registered\n");
+            return -1;
+        }
+        jlogin=jweb;
+        goto CHECK_WEBSITE;
+    }
+
+    jidw = json_object_iter_begin(jobj);
+    jidwEnd = json_object_iter_end(jobj);
+    while(!json_object_iter_equal(&jidw, &jidwEnd)){
+        website = json_object_iter_peek_name(&jidw);
+        jlogin = json_object_iter_peek_value(&jidw);
+        goto CHECK_WEBSITE;
+        WEBSITE_ITERATION:
+        json_object_iter_next(&jidw);
+    } goto FINAL;
+
+    CHECK_WEBSITE:
+    printf("*%s:\n", website);
+    jidl = json_object_iter_begin(jlogin);
+    jidlEnd = json_object_iter_end(jlogin);
+    while(!json_object_iter_equal(&jidl, &jidlEnd)){
+        printf("    %s\n", json_object_iter_peek_name(&jidl));
+        json_object_iter_next(&jidl);
+    }
+    printf("\n");
+    if(argc==2)
+        goto WEBSITE_ITERATION;
+
+    FINAL:
+    return 0;
+}
+
 /* Slighty copied from GNU. I've took so much time figuring out this so yiff off*/
 ssize_t getpass (char* message, char **lineptr)
 {
@@ -207,6 +254,9 @@ const int checkArguments(int argc, char* argv[]){
     }
     if(strcmp(argv[1], "--set")==0){
         return setAccount(argc, argv);
+    }
+    if(strcmp(argv[1], "--list")==0){
+        return list(argc, argv);
     }
 
     return displayPassword(argc, argv);
