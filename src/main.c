@@ -157,6 +157,27 @@ const int setAccount(int argc, char* argv[]){
 
     return update_passwords(jobj, iconf.fingerprint);
 }
+const int removePassword(int argc, char* argv[]){
+    switch(argc){
+        case 2:
+            fprintf(stderr,
+                "At least a website must be specified\n"
+                "Usage:\n"
+                "%s --remove <WEBSITE> [LOGIN]\n",
+                app_name
+            );
+            return -1;
+
+        case 3:
+            return 0;
+
+        case 4:
+            return 0;
+
+        default:
+            invalidArguments(argc, argv, 4);
+    }
+}
 
 const int list(int argc, char* argv[]){
 
@@ -267,6 +288,9 @@ const int checkArguments(int argc, char* argv[]){
     }
     if(strcmp(argv[1], "--list")==0){
         return list(argc, argv);
+    }
+    if(strcmp(argv[1], "--remove")==0){
+        return removePassword(argc, argv);
     }
 
     return displayPassword(argc, argv);
