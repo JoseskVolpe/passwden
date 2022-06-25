@@ -142,7 +142,6 @@ const int setAccount(int argc, char* argv[]){
 
     struct json_object *jobj = get_passwords(iconf.fingerprint);
     getUserInfo(argc, argv, &ui);
-    printf("%s, %s\n", ui.website, ui.login); //TODO: REMOVE ME
     ui.sec = askNewPassword();
 
     struct json_object *wjobj, *ljobj, *passobj, *secj;
