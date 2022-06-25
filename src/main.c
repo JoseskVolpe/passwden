@@ -164,8 +164,8 @@ const int setAccount(int argc, char* argv[]){
 }
 const int removePassword(int argc, char* argv[]){
 
-    struct json_object *jobj, *jweb;
-    char *website = argv[2];
+    struct json_object *jobj, *jweb, *jlogin;
+    char *website = argv[2], *login;
 
     switch(argc){
         case 2:
@@ -198,6 +198,22 @@ const int removePassword(int argc, char* argv[]){
 
             goto WEBSITE_SEARCH;
             AFT_WEB_SEARCH4:
+            login = argv[3];
+            if(!json_object_object_get_ex(jweb, login, &jlogin)){
+                fprintf(stderr, "Login not registered\n");
+                return -1;
+            }
+            printf("Delete \"%s\" from \"%s\". ", login, website);
+            if(beSure()==FALSE){
+                printf("Operation canceled\n");
+                goto FINAL;
+            }
+
+            json_object_object_del(jweb, login);
+            if(update_passwords(jobj, iconf.fingerprint))
+                return -1;
+            printf("Login removed from database!\n");
+
             return 0;
 
         default:
