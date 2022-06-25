@@ -31,7 +31,7 @@ bindir = $(prefix)/bin
 all: output
 
 output: $(objects)
-	gcc $(objects) `pkg-config --cflags $(cflags)` -o passwden -linih -ljson-c -lgcrypt
+	gcc $(objects) `pkg-config --cflags $(cflags)` `gpgme-config --cflags --libs` -o passwden -linih -ljson-c -lgcrypt
 
 main.o: main.c
 	gcc -c main.c

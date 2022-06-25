@@ -24,8 +24,9 @@
 #include <stdio.h>
 #include <json-c/json.h>
 #include <sys/stat.h>
-#include <gcrypt.h>
+#include <gpgme.h>
 #include "configuration.h"
+#include <string.h>
 
 #define STRINGLEN(s) strlen(s)*sizeof(char)
 #define PASSFILENAME "passwords.gpg"
