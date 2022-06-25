@@ -338,16 +338,16 @@ const char * askNewPassword(){
 
 const int keyArgument(int argc, char* argv[]);
 const int checkArguments(int argc, char* argv[]){
-    if(strcmp(argv[1], "--key")==0){
+    if(strcmp(argv[1], "--key")==0 || strcmp(argv[1], "-k")==0){
         return keyArgument(argc, argv);
     }
-    if(strcmp(argv[1], "--set")==0){
+    if(strcmp(argv[1], "--set")==0 || strcmp(argv[1], "-s")==0){
         return setAccount(argc, argv);
     }
-    if(strcmp(argv[1], "--list")==0){
+    if(strcmp(argv[1], "--list")==0 || strcmp(argv[1], "-l")==0){
         return list(argc, argv);
     }
-    if(strcmp(argv[1], "--remove")==0){
+    if(strcmp(argv[1], "--remove")==0 || strcmp(argv[1], "-r")==0){
         return removePassword(argc, argv);
     }
 
