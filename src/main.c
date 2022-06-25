@@ -341,6 +341,12 @@ const int checkArguments(int argc, char* argv[]){
     if(strcmp(argv[1], "--key")==0 || strcmp(argv[1], "-k")==0){
         return keyArgument(argc, argv);
     }
+
+    if(iconf.fingerprint==NULL || strlen(iconf.fingerprint)==0){
+        showKeyDefineHelp();
+        return -1;
+    }
+
     if(strcmp(argv[1], "--set")==0 || strcmp(argv[1], "-s")==0){
         return setAccount(argc, argv);
     }
@@ -358,7 +364,7 @@ const int keyArgument(int argc, char* argv[]){
     switch(argc){
             case 2: //Show key
 
-                if(strlen(iconf.fingerprint)==0){
+                if(iconf.fingerprint==NULL || strlen(iconf.fingerprint)==0){
                     showKeyDefineHelp();
                     return 0;
                 }
@@ -390,7 +396,7 @@ void showHelp(){
 }
 
 void showKeyDefineHelp(){
-    printf("No key fingerprint is defined, to set your key fingerprint, use:\n%s --key <fingerprint>\n", app_name);
+    fprintf(stderr, FINGERPRINT_NOT_DEFINED, app_name);
 }
 
 const int invalidArguments(int argc, char* argv[], int index){
