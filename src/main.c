@@ -30,11 +30,16 @@
 #include "configuration.h"
 #include "passfile.h"
 
+#define BOOL char
+#define TRUE 1
+#define FALSE 0
+
 INIconf iconf;
 
 const int invalidArguments(int argc, char *argv[], int index);
 void showHelp();
 void showKeyDefineHelp();
+const BOOL beSure();
 const int checkArguments(int argc, char* argv[]);
 const char * askNewPassword();
 
@@ -158,6 +163,10 @@ const int setAccount(int argc, char* argv[]){
     return update_passwords(jobj, iconf.fingerprint);
 }
 const int removePassword(int argc, char* argv[]){
+
+    struct json_object *jobj, *jweb;
+    char *website = argv[2];
+
     switch(argc){
         case 2:
             fprintf(stderr,
@@ -169,14 +178,47 @@ const int removePassword(int argc, char* argv[]){
             return -1;
 
         case 3:
+
+            goto WEBSITE_SEARCH;
+            AFT_WEB_SEARCH3:
+            printf("Delete ALL passwords for website \"%s\". ", website);
+            if(beSure()==FALSE){
+                printf("Operation canceled\n");
+                goto FINAL;
+            }
+
+            json_object_object_del(jobj, website);
+            if(update_passwords(jobj, iconf.fingerprint))
+                return -1;
+            printf("Website cleaned from database!\n");
+
             return 0;
 
         case 4:
+
+            goto WEBSITE_SEARCH;
+            AFT_WEB_SEARCH4:
             return 0;
 
         default:
             invalidArguments(argc, argv, 4);
     }
+
+    WEBSITE_SEARCH:
+    jobj = get_passwords(iconf.fingerprint);
+    if(!json_object_object_get_ex(jobj, website, &jweb)){
+        fprintf(stderr, "Website not registered\n");
+        return -1;
+    }
+    switch(argc){
+        case 3:
+            goto AFT_WEB_SEARCH3;
+        case 4:
+            goto AFT_WEB_SEARCH4;
+    }
+
+    FINAL:
+    return 0;
 }
 
 const int list(int argc, char* argv[]){
@@ -344,4 +386,23 @@ const int invalidArguments(int argc, char* argv[], int index){
 
     printf("\n");
     return -1;
+}
+
+BOOL beSure(){
+
+    struct termios new, old;
+
+    if (tcgetattr (fileno (stdin), &old) != 0)
+    return -1;
+    new = old;
+    new.c_lflag &= ~ICANON;
+    tcsetattr (fileno (stdin), TCSAFLUSH, &new);
+
+    printf("Are you sure? (y/N) ");
+    int c = getchar();
+    printf("\n");
+
+    tcsetattr (fileno (stdin), TCSAFLUSH, &old);
+
+    return c=='y' || c=='Y';
 }
