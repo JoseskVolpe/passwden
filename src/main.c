@@ -21,7 +21,7 @@
  *
  */
 
-#include <unistd.h>
+#include <termios.h>
 #include "message.h"
 #include <stdlib.h>
 #include <string.h>
@@ -103,17 +103,35 @@ const int displayPassword(int argc, char* argv[]){
     return 0;
 }
 
+void getUserInfo(int argc, char* argv[], const char * website, const char * login){
+    switch(argc){
+        case 3:
+            website = argv[2];
+            printf("Website: %s\n", website);
+            printf("Login: ");
+            scanf("%s", login);
+            break;
+        case 4:
+            website = argv[2];
+            fprintf(stdout, "Website: %s\n", website);
+            login = argv[3];
+            fprintf(stdout, "Login: %s\n", login);
+            break;
+        default:
+            printf("Website name: ");
+            scanf("%s", website);
+            printf("Login: ");
+            scanf("%s", login);
+            break;
+    }
+}
+
 const int setAccount(int argc, char* argv[]){
 
-    const char website[120], login[120], *sec;
+    const char website[120], login[120], *sec; //TODO: Instead of creating a limited buffer, use realloc()
 
     struct json_object *jobj = get_passwords(iconf.fingerprint);
-
-    printf("Website name: ");
-    scanf("%s", website);
-    printf("Login: ");
-    scanf("%s", login);
-
+    getUserInfo(argc, argv, website, login);
     sec = askNewPassword();
 
     struct json_object *wjobj, *ljobj, *passobj, *secj;
@@ -130,23 +148,56 @@ const int setAccount(int argc, char* argv[]){
     return update_passwords(jobj, iconf.fingerprint);
 }
 
+/* Slighty copied from GNU. I've took so much time figuring out this so yiff off*/
+ssize_t getpass (char* message, char **lineptr)
+{
+    struct termios old, new;
+    int nread;
+
+    size_t n = 0;
+
+    printf(message);
+
+    /* Turn echoing off and fail if we can’t. */
+    if (tcgetattr (fileno (stdin), &old) != 0)
+    return -1;
+    new = old;
+    new.c_lflag &= ~ECHO;
+    if (tcsetattr (fileno (stdin), TCSAFLUSH, &new) != 0)
+        return -1;
+
+    /* Read the passphrase */
+    nread = getline (lineptr, &n, stdin);
+
+    /* Restore terminal. */
+    (void) tcsetattr (fileno (stdin), TCSAFLUSH, &old);
+    lineptr[0][strcspn(lineptr[0], "\n" )] = '\0';
+
+    printf("\n");
+    return nread;
+}
+
+
 const char * askNewPassword(){
 
     char *sec, *sec2;
 
     INSERT_PASSWORD:
-    sec = strdup(getpass("Password: "));
+    if(getpass("Password: ", &sec)<0)
+        exit(-1);
     if(strlen(sec)<6){
         fprintf(stderr, "Password or PIN must have at-least 6 characters\n");
         goto INSERT_PASSWORD;
     }
-    sec2 = getpass("Confirm password: ");
+
+    if(getpass("Confirm password: ", &sec2)<0)
+        exit(-1);
     if(strcmp(sec, sec2)!=0){
         fprintf(stderr, "Passwords mismatch, try again\n");
         goto INSERT_PASSWORD;
     }
-    free(sec);
-    return sec2;
+    free(sec2);
+    return sec;
 }
 
 const int keyArgument(int argc, char* argv[]);

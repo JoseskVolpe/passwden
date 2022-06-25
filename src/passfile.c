@@ -28,7 +28,7 @@
 
 #define STRINGLEN(s) strlen(s)*sizeof(char)
 #define PASSFILENAME "passwords.gpg"
-#define BUFFERSIZE 9000
+#define BUFFERSIZE 9000 //TODO: Instead of creating a limited buffer, use realloc()
 
 const char * getPassFilePath();
 const char * decrypt(const char * src, const char * fingerprint);
