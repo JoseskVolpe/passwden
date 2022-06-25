@@ -103,47 +103,58 @@ const int displayPassword(int argc, char* argv[]){
     return 0;
 }
 
-void getUserInfo(int argc, char* argv[], const char * website, const char * login){
+typedef struct user_info{
+    const char  *website,
+                *login,
+                *sec;
+}user_info;
+void getUserInfo(int argc, char* argv[], struct user_info * ui){
+    #define BUFFER 120 /* TODO: User realloc() */
+
     switch(argc){
         case 3:
-            website = argv[2];
-            printf("Website: %s\n", website);
+            ui->website = argv[2];
+            printf("Website: %s\n", ui->website);
+            ui->login = malloc(BUFFER*sizeof(char));
             printf("Login: ");
-            scanf("%s", login);
+            scanf("%s", ui->login);
             break;
         case 4:
-            website = argv[2];
-            fprintf(stdout, "Website: %s\n", website);
-            login = argv[3];
-            fprintf(stdout, "Login: %s\n", login);
+            ui->website = argv[2];
+            fprintf(stdout, "Website: %s\n", ui->website);
+            ui->login = argv[3];
+            fprintf(stdout, "Login: %s\n", ui->login);
             break;
         default:
             printf("Website name: ");
-            scanf("%s", website);
+            ui->website = malloc(BUFFER*sizeof(char));
+            scanf("%s", ui->website);
             printf("Login: ");
-            scanf("%s", login);
+            ui->login = malloc(BUFFER*sizeof(char));
+            scanf("%s", ui->login);
             break;
     }
 }
 
 const int setAccount(int argc, char* argv[]){
 
-    const char website[120], login[120], *sec; //TODO: Instead of creating a limited buffer, use realloc()
+    struct user_info ui;
 
     struct json_object *jobj = get_passwords(iconf.fingerprint);
-    getUserInfo(argc, argv, website, login);
-    sec = askNewPassword();
+    getUserInfo(argc, argv, &ui);
+    printf("%s, %s\n", ui.website, ui.login); //TODO: REMOVE ME
+    ui.sec = askNewPassword();
 
     struct json_object *wjobj, *ljobj, *passobj, *secj;
-    if(!json_object_object_get_ex(jobj, website, &wjobj)){
+    if(!json_object_object_get_ex(jobj, ui.website, &wjobj)){
         wjobj = json_object_new_object();
-        json_object_object_add(jobj, website, wjobj);
+        json_object_object_add(jobj, ui.website, wjobj);
     }
 
-    secj = json_object_new_string(sec);
+    secj = json_object_new_string(ui.sec);
     passobj = json_object_new_object();
     json_object_object_add(passobj, "password", secj);
-    json_object_object_add(wjobj, login, passobj);
+    json_object_object_add(wjobj, ui.login, passobj);
 
     return update_passwords(jobj, iconf.fingerprint);
 }
