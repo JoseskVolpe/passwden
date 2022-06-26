@@ -70,6 +70,8 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
     strcpy(bk_path, passfilepath);
     strcat(bk_path, ".bk");
 
+    const char *enc = encrypt(json_object_get_string(jobj), fingerprint);
+
     if((f = fopen(passfilepath, "rw")) != NULL ){ //Backup
         bk = fopen(bk_path, "w");
 
@@ -85,7 +87,7 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
         f = fopen(passfilepath, "w");
     }
 
-    fprintf(f, encrypt(json_object_get_string(jobj), fingerprint));
+    fprintf(f, enc);
     fclose(f);
     chmod(passfilepath, strtol("0600", 0, 8));
 
