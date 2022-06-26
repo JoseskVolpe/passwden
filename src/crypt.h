@@ -1,5 +1,5 @@
-/*
- * passfile.h
+  /*
+ * crypt.h
  *
  * Copyright 2022 Josesk Volpe <joseskvolpe@gmail.com>
  *
@@ -21,8 +21,8 @@
  *
  */
 
-#include <json-c/json.h>
-#define BUFFERSIZE 9000 //TODO: Instead of creating a limited buffer, use realloc()
+#include <gpgme.h>
 
-const struct json_object * get_passwords(const char * fingerprint);
-const int update_passwords(struct json_object *jobj, const char *fingerprint);
+void getCtx(gpgme_ctx_t *ctx);
+const char * decrypt(const char * src);
+const char * encrypt(const char * src, const char * fingerprint);

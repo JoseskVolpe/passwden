@@ -22,7 +22,7 @@
 #
 
 
-objects = passfile.o message.o configuration.o main.o
+objects = crypt.o passfile.o message.o configuration.o main.o
 cflags = json-c
 
 prefix = $(DESTDIR)/usr
@@ -44,6 +44,9 @@ message.o: message.c message.h
 
 passfile.o: passfile.c passfile.h
 	gcc -c passfile.c passfile.h
+
+crypt.o: crypt.c crypt.h
+	gcc -c crypt.c crypt.h
 
 install:
 	# Make directories

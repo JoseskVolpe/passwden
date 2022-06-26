@@ -24,17 +24,17 @@
 #include <stdio.h>
 #include <json-c/json.h>
 #include <sys/stat.h>
-#include <gpgme.h>
 #include "configuration.h"
 #include <string.h>
+#include "message.h"
+#include "crypt.h"
+#include "passfile.h"
 
 #define STRINGLEN(s) strlen(s)*sizeof(char)
 #define PASSFILENAME "passwords.gpg"
-#define BUFFERSIZE 9000 //TODO: Instead of creating a limited buffer, use realloc()
+
 
 const char * getPassFilePath();
-const char * decrypt(const char * src, const char * fingerprint);
-const char * encrypt(const char * src, const char * fingerprint);
 
 const struct json_object * get_passwords(const char * fingerprint){
 
@@ -51,7 +51,7 @@ const struct json_object * get_passwords(const char * fingerprint){
         fread(buffer, BUFFERSIZE, 1, fd);
         fclose(fd);
 
-        const char * bufferd = decrypt(buffer, fingerprint);
+        const char * bufferd = decrypt(buffer);
         jobj = json_tokener_parse(bufferd);
     }else{
         jobj = json_object_new_object();
@@ -103,12 +103,3 @@ const char * getPassFilePath(){
     return passfilepath;
 }
 
-const char * decrypt(const char * src, const char * fingerprint){
-    printf("WARNING: decrypt() not yet implemented!\n");
-    return src; //TODO: Encryption and decryption
-}
-
-const char * encrypt(const char * src, const char * fingerprint){
-    printf("WARNING: encrypt() not yet implemented!\n");
-    return src; //TODO: Encryption and decryption
-}
