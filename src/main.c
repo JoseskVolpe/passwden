@@ -466,7 +466,7 @@ void showHelp(){
         "Avoid using this program in a default terminal as the password will be printed. Execute, then clear (or exit)\n",
         app_name, VERSION
 
-    ); //TODO: Help page
+    );
 }
 
 void showKeyDefineHelp(){
