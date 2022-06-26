@@ -359,6 +359,7 @@ const char * askNewPassword(){
     return sec;
 }
 
+void showVersion();
 const int keyArgument(int argc, char* argv[]);
 const int checkArguments(int argc, char* argv[]){
     if(strcmp(argv[1], "--key")==0 || strcmp(argv[1], "-k")==0){
@@ -378,6 +379,10 @@ const int checkArguments(int argc, char* argv[]){
     }
     if(strcmp(argv[1], "--remove")==0 || strcmp(argv[1], "-r")==0){
         return removePassword(argc, argv);
+    }
+    if(strcmp(argv[1], "--version")==0 || strcmp(argv[1], "-v")==0){
+        showVersion();
+        return 0;
     }
 
     if(argv[1][0] == '-'){
@@ -437,25 +442,33 @@ const int keyArgument(int argc, char* argv[]){
     }
 }
 
-void showHelp(){
+void showVersion(){
     printf(
 
         "%s (Passwords Den) %s\n"
         "Copyright (C) 2022 Josesk Volpe\n"
         "License GNU GPL-3.0-or-later <https://gnu.org/licenses/gpl.html>\n"
         "This is free software: you are free to change and redistribute it.\n"
-        "There is NO WARRANTY, to the extent permitted by law.\n"
-        "\n"
-        "\n"
+        "There is NO WARRANTY, to the extent permitted by law.\n",
+        app_name, VERSION
+
+    );
+}
+
+void showHelp(){
+    showVersion();
+    printf("\n\n");
+    printf(
         "passwden {WEBSITE [LOGIN]}: Show passwords\n"
         "\n"
         "passwden OPTION\n"
         "Options:\n"
         "{--set | -s} Add or update a account password\n"
-        "{--remove | -r} <WEBSITE> [LOGIN] : remove a website or password\n"
-        "{--help | -h}: show help\n"
-        "{--key | -k} [FINGERPRINT]: show key fingerprint / set key fingerprint. Passwords will be reencrypt after updating your fingerprint\n"
-        "{--list | -l} [WEBSITE]: list registered websites and login\n"
+        "{--remove | -r} <WEBSITE> [LOGIN] : Remove a website or password\n"
+        "{--help | -h}: Show help\n"
+        "{--key | -k} [FINGERPRINT]: Show key fingerprint / set key fingerprint. Passwords will be reencrypt after updating your fingerprint\n"
+        "{--list | -l} [WEBSITE]: List registered websites and login\n"
+        "{--version | -v}: Show version\n"
         "\n"
         "\n"
         "To use this program, you need to first apply your fingerprint.\n"
@@ -463,8 +476,7 @@ void showHelp(){
         "To search for your keys fingerprints, use:\n"
         "gpg --list-secret-keys --keyid-format=long [NAME OR EMAIL]\n"
         "\n"
-        "Avoid using this program in a default terminal as the password will be printed. Execute, then clear (or exit)\n",
-        app_name, VERSION
+        "Avoid using this program in a default terminal as the password will be printed. Execute, then clear (or exit)\n"
 
     );
 }
