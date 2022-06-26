@@ -33,6 +33,7 @@
 #include <json-c/json.h>
 #include "configuration.h"
 #include "passfile.h"
+#include "crypt.h"
 
 #define BOOL char
 #define TRUE 1
@@ -397,8 +398,15 @@ const int keyArgument(int argc, char* argv[]){
                     return -1;
                 }
 
-                //FIXME: Check if fingerprint has a private key
-                printf("FIXME: Program must check if fingerprint is a private key\n");
+                gpgme_ctx_t ctx;
+                gpgme_error_t err;
+                gpgme_key_t key;
+                getCtx(&ctx);
+                if ((err = gpgme_get_key (ctx, argv[2], &key, TRUE))){
+                    fprintf(stderr, INVALID_FINGERPRINT_NOT_FOUND_MESSAGE);
+                    return -1;
+                }
+                gpgme_key_release(key);
 
                 iconf.fingerprint = strdup(argv[2]); //TODO: Reencrypt passwords JSON
                 updateConfigFile(&iconf);
