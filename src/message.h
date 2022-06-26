@@ -22,7 +22,7 @@
  */
 
  #define INVALID_FINGERPRINT_LENGTH_MESSAGE "Invalid fingerprint, value must have 16 characters\n"
- #define INVALID_FINGERPRINT_NOT_FOUND_MESSAGE "Invalid fingerprint, key not found\n"
+ #define INVALID_FINGERPRINT_NOT_FOUND_MESSAGE "Invalid fingerprint, private key not found\n"
  #define FINGERPRINT_NOT_DEFINED "You must choose your private key fingerprint first. Use: \n%s --key <FINGERPRINT>\nWith GnuPG, you may find your fingerprints by using:\ngpg --list-secret-keys --keyid-format=long\n"
  #define GPGME_VERSION_OUTDATED "gpgme required version is %s, you got %s. Please, update it\n"
  #define GPGME_ERROR "gpgme error %s, exiting...\n"
