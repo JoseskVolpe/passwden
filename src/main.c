@@ -380,6 +380,12 @@ const int checkArguments(int argc, char* argv[]){
         return removePassword(argc, argv);
     }
 
+    if(argv[1][0] == '-'){
+        fprintf(stderr, "Unrecognized option: %s\n\n", argv[1]);
+        showHelp();
+        return -1;
+    }
+
     return displayPassword(argc, argv);
 }
 
