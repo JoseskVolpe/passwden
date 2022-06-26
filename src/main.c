@@ -23,6 +23,8 @@
 
 //#define REQUIRED_GPGME "1.12.0" //There's no method with minimum version spec for now
 
+#define VERSION "0.10.0"
+
 #include <gpgme.h>
 #include <zconf.h>
 #include <termios.h>
@@ -430,7 +432,35 @@ const int keyArgument(int argc, char* argv[]){
 }
 
 void showHelp(){
-    printf("¡Write a help page here! >w< \n"); //TODO: Help page
+    printf(
+
+        "%s (Passwords Den) %s\n"
+        "Copyright (C) 2022 Josesk Volpe\n"
+        "License GNU GPL-3.0-or-later <https://gnu.org/licenses/gpl.html>\n"
+        "This is free software: you are free to change and redistribute it.\n"
+        "There is NO WARRANTY, to the extent permitted by law.\n"
+        "\n"
+        "\n"
+        "passwden {WEBSITE [LOGIN]}: Show passwords\n"
+        "\n"
+        "passwden OPTION\n"
+        "Options:\n"
+        "{--set | -s} Add or update a account password\n"
+        "{--remove | -r} <WEBSITE> [LOGIN] : remove a website or password\n"
+        "{--help | -h}: show help\n"
+        "{--key | -k} [FINGERPRINT]: show key fingerprint / set key fingerprint. Passwords will be reencrypt after updating your fingerprint\n"
+        "{--list | -l} [WEBSITE]: list registered websites and login\n"
+        "\n"
+        "\n"
+        "To use this program, you need to first apply your fingerprint.\n"
+        "It's STRONGELY RECOMMEND that you use a key exclusively for this purpose and that you secure the private key with a password.\n"
+        "To search for your keys fingerprints, use:\n"
+        "gpg --list-secret-keys --keyid-format=long [NAME OR EMAIL]\n"
+        "\n"
+        "Avoid using this program in a default terminal as the password will be printed. Execute, then clear (or exit)\n",
+        app_name, VERSION
+
+    ); //TODO: Help page
 }
 
 void showKeyDefineHelp(){
