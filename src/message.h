@@ -27,3 +27,4 @@
  #define GPGME_VERSION_OUTDATED "gpgme required version is %s, you got %s. Please, update it\n"
  #define GPGME_ERROR "gpgme error %s, exiting...\n"
  #define GPGME_CIPHERTEXT_ERROR "Error reading ciphertext\nMax buffer is %d, got %d\n"
+ #define ERROR_REENCRYPTING_FILE_MESSAGE "Couldn't reencrypt passwords, fingerprint apply cancelled.\nPlease, check you still have your old private key\n"

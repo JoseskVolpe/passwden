@@ -409,6 +409,16 @@ const int keyArgument(int argc, char* argv[]){
                 }
                 gpgme_key_release(key);
 
+                /*Reencrypt file before applying setting*/
+                if(iconf.fingerprint != NULL && strlen(iconf.fingerprint)>0){
+                    struct json_object *jobj = get_passwords(iconf.fingerprint);
+                    if(update_passwords(jobj, argv[2])!=0){
+                        fprintf(stderr, ERROR_REENCRYPTING_FILE_MESSAGE);
+                        return -1;
+                    }
+                    free(jobj);
+                }
+
                 iconf.fingerprint = strdup(argv[2]); //TODO: Reencrypt passwords JSON
                 updateConfigFile(&iconf);
                 return 0;
