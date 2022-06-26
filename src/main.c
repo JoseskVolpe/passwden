@@ -21,7 +21,7 @@
  *
  */
 
-#define REQUIRED_GPGME "1.12.0"
+//#define REQUIRED_GPGME "1.12.0" //There's no method with minimum version spec for now
 
 #include <gpgme.h>
 #include <zconf.h>
@@ -59,10 +59,11 @@ int main(int argc, char* argv[]){
         return -1;
     }
 
-    if (!gpgme_check_version(REQUIRED_GPGME)){
+    /*if (!gpgme_check_version(REQUIRED_GPGME)){
         printf(GPGME_VERSION_OUTDATED, REQUIRED_GPGME, gpgme_check_version(NULL));
         return -1;
-    }
+    }*/
+    gpgme_check_version(NULL);
 
 
     if(argc==1 || strcmp(argv[1], "--help")==0 || strcmp(argv[1], "-h")==0){
