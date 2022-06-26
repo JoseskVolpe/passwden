@@ -36,7 +36,7 @@
 
 const char * getPassFilePath();
 
-const struct json_object * get_passwords(const char * fingerprint){
+struct json_object * get_passwords(const char * fingerprint){
 
     const char *passfilepath = getPassFilePath();
 
@@ -44,7 +44,7 @@ const struct json_object * get_passwords(const char * fingerprint){
     char *buffer;
     FILE *fd = fopen(passfilepath, "r");
 
-    const struct json_object *jobj;
+    struct json_object *jobj;
 
     buffer=malloc(BUFFERSIZE*sizeof(char));
     if(fd!=NULL) {

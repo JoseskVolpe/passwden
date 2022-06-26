@@ -24,5 +24,5 @@
 #include <json-c/json.h>
 #define BUFFERSIZE 9000 //TODO: Instead of creating a limited buffer, use realloc()
 
-const struct json_object * get_passwords(const char * fingerprint);
+struct json_object * get_passwords(const char * fingerprint);
 const int update_passwords(struct json_object *jobj, const char *fingerprint);
