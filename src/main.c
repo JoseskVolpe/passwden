@@ -21,6 +21,9 @@
  *
  */
 
+#define REQUIRED_GPGME "1.12.0"
+
+#include <gpgme.h>
 #include <zconf.h>
 #include <termios.h>
 #include "message.h"
@@ -54,6 +57,12 @@ int main(int argc, char* argv[]){
         fprintf(stderr, "Only the original user is allowed to check their passwords. Execution blocked for security reasons!\n");
         return -1;
     }
+
+    if (!gpgme_check_version(REQUIRED_GPGME)){
+        printf(GPGME_VERSION_OUTDATED, REQUIRED_GPGME, gpgme_check_version(NULL));
+        return -1;
+    }
+
 
     if(argc==1 || strcmp(argv[1], "--help")==0 || strcmp(argv[1], "-h")==0){
         showHelp();
