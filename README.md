@@ -15,11 +15,10 @@ Check your distribution's package manager.
 These packages are required to use this tool:
 * GPGME
 * json-c
+* libinih
 
 These packages are required to build this tool:
-* GPGME
 * gcc (Alternative compilers like musl-gccc may work, but it wasn't tested)
-* json-c
 * make
 * pkgconf
 
