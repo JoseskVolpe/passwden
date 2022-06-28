@@ -26,7 +26,7 @@ These packages are required to build this tool:
 ## Build
 ### Compile
 `make`
-## Install
+### Install
 `[DESTDIR=PATH/TO/EXTRACT] make install`
 
 Note: Check your distribution's packaging manual to install system-wide
