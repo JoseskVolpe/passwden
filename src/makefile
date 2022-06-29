@@ -21,9 +21,12 @@
 #
 #
 
+CC="gcc"
+CFLAGS="-Wall"
+
 
 objects = crypt.o passfile.o message.o configuration.o main.o
-cflags = json-c
+pkgconfcflags = json-c
 
 prefix = $(DESTDIR)/usr
 bindir = $(prefix)/bin
@@ -31,22 +34,22 @@ bindir = $(prefix)/bin
 all: output
 
 output: $(objects)
-	gcc $(objects) `pkg-config --cflags $(cflags)` `gpgme-config --cflags --libs` -o passwden -linih -ljson-c
+	$(CC) $(CFLAGS) $(objects) `pkg-config --cflags $(pkgconfcflags)` `gpgme-config --cflags --libs` $(LDFLAGS) -o passwden -linih -ljson-c
 
 main.o: main.c
-	gcc -c main.c
+	$(CC) -c main.c
 
 configuration.o: configuration.c configuration.h
-	gcc -c configuration.c configuration.h
+	$(CC) -c configuration.c configuration.h
 
 message.o: message.c message.h
-	gcc -c message.c message.h
+	$(CC) -c message.c message.h
 
 passfile.o: passfile.c passfile.h
-	gcc -c passfile.c passfile.h
+	$(CC) -c passfile.c passfile.h
 
 crypt.o: crypt.c crypt.h
-	gcc -c crypt.c crypt.h
+	$(CC) -c crypt.c crypt.h
 
 install:
 	# Make directories
