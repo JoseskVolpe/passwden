@@ -45,6 +45,7 @@ INIconf iconf;
 
 const int invalidArguments(int argc, char *argv[], int index);
 void showHelp();
+void showVersion();
 void showKeyDefineHelp();
 const BOOL beSure();
 const int checkArguments(int argc, char* argv[]);
@@ -70,6 +71,11 @@ int main(int argc, char* argv[]){
 
     if(argc==1 || strcmp(argv[1], "--help")==0 || strcmp(argv[1], "-h")==0){
         showHelp();
+        return 0;
+    }
+
+    if(strcmp(argv[1], "--version")==0 || strcmp(argv[1], "-v")==0){
+        showVersion();
         return 0;
     }
 
@@ -359,7 +365,6 @@ const char * askNewPassword(){
     return sec;
 }
 
-void showVersion();
 const int keyArgument(int argc, char* argv[]);
 const int checkArguments(int argc, char* argv[]){
     if(strcmp(argv[1], "--key")==0 || strcmp(argv[1], "-k")==0){
@@ -379,10 +384,6 @@ const int checkArguments(int argc, char* argv[]){
     }
     if(strcmp(argv[1], "--remove")==0 || strcmp(argv[1], "-r")==0){
         return removePassword(argc, argv);
-    }
-    if(strcmp(argv[1], "--version")==0 || strcmp(argv[1], "-v")==0){
-        showVersion();
-        return 0;
     }
 
     if(argv[1][0] == '-'){
