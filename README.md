@@ -14,11 +14,14 @@ Check your distribution's package manager.
 
 These packages are required to use this tool:
 * GPGME
+* libassuan
+* libgpg-error
 * json-c
+* libc (Alternative C assemblers may work)
 * libinih
 
 These packages are required to build this tool:
-* gcc (Alternative compilers like musl-gccc may work, but it wasn't tested)
+* gcc (Alternative compilers like musl-gcc may work, but it wasn't tested)
 * make
 * pkgconf
 
