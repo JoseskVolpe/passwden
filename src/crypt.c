@@ -64,7 +64,7 @@ const char * decrypt(const char * src){
 
     READ:
     size_t bufsiz = gpgme_data_read(plain, &dest[offs], destal-offs);
-    if(bufsiz<1){
+    if(bufsiz<0){
         fprintf(stderr, GPGME_CIPHERTEXT_ERROR, destal, bufsiz);
         exit(-1);
     }
@@ -122,7 +122,7 @@ const char * encrypt(const char * src, const char * fingerprint){
     dest = malloc(destal);
     WRITE:
     size_t bufsiz = gpgme_data_read(cipher, &dest[offs], destal-offs);
-    if(bufsiz<1){
+    if(bufsiz<0){
         fprintf(stderr, GPGME_CIPHERTEXT_ERROR, destal, bufsiz);
         exit(-1);
     }
