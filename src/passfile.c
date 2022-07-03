@@ -66,7 +66,7 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
     const char *passfilepath = getPassFilePath();
 
     FILE *f, *bk;
-    char *bk_path = malloc(STRINGLEN(passfilepath)+STRINGLEN(".bk"));
+    char *bk_path = malloc(STRINGLEN(passfilepath)+STRINGLEN(".bk")+sizeof(char));
     strcpy(bk_path, passfilepath);
     strcat(bk_path, ".bk");
 
@@ -97,7 +97,7 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
 
 const char * getPassFilePath(){
     const char *dir_path = configDirPath();
-    char *passfilepath = malloc(STRINGLEN(dir_path)+sizeof(char)+STRINGLEN(PASSFILENAME));
+    char *passfilepath = malloc(STRINGLEN(dir_path)+sizeof(char)*2+STRINGLEN(PASSFILENAME));
     strcpy(passfilepath, dir_path);
     strcat(passfilepath, "/");
     strcat(passfilepath, PASSFILENAME);

@@ -149,7 +149,7 @@ void getUserInfo(int argc, char* argv[], struct user_info * ui){
         case 3:
             ui->website = argv[2];
             printf("Website: %s\n", ui->website);
-            ui->login = malloc(BUFFER*sizeof(char));
+            ui->login = malloc(BUFFER*sizeof(char)+sizeof(char));
             printf("Login: ");
             scanf("%s", ui->login);
             break;
@@ -161,10 +161,10 @@ void getUserInfo(int argc, char* argv[], struct user_info * ui){
             break;
         default:
             printf("Website name: ");
-            ui->website = malloc(BUFFER*sizeof(char));
+            ui->website = malloc(BUFFER*sizeof(char)+sizeof(char));
             scanf("%s", ui->website);
             printf("Login: ");
-            ui->login = malloc(BUFFER*sizeof(char));
+            ui->login = malloc(BUFFER*sizeof(char)+sizeof(char));
             scanf("%s", ui->login);
             break;
     }
