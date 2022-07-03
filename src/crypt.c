@@ -57,13 +57,23 @@ const char * decrypt(const char * src){
     if(err && err!=GPG_ERR_NO_ERROR)
         goto ERROR;
 
-    size_t destal = BUFFERSIZE*sizeof(char);
+    size_t destal = BUFFERSIZE*sizeof(char)+sizeof(char);
+    unsigned long offs=0;
     dest = malloc(destal);
     gpgme_data_seek(plain, 0, SEEK_SET);
-    size_t bufsiz = gpgme_data_read(plain, dest, destal);
-    if(bufsiz>=destal || bufsiz<1){
+
+    READ:
+    size_t bufsiz = gpgme_data_read(plain, &dest[offs], destal-offs);
+    if(bufsiz<1){
         fprintf(stderr, GPGME_CIPHERTEXT_ERROR, destal, bufsiz);
         exit(-1);
+    }
+    if(bufsiz+offs>=destal-sizeof(char)){
+        offs=bufsiz-1;
+        destal+=BUFFERSIZE*sizeof(char);
+        dest = (char *)realloc(dest, destal);
+        gpgme_data_seek(plain, bufsiz-sizeof(char), SEEK_SET);
+        goto READ;
     }
     goto FINAL;
 
@@ -72,6 +82,7 @@ const char * decrypt(const char * src){
     exit(-1);
 
     FINAL:
+    dest[destal-sizeof(char)]='\0';
     gpgme_data_release(cipher);
     gpgme_data_release(plain);
     return dest;
