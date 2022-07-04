@@ -143,15 +143,18 @@ typedef struct user_info{
                 *sec;
 }user_info;
 void getUserInfo(int argc, char* argv[], struct user_info * ui){
-    #define BUFFER 120 /* TODO: User realloc() */
+
+    char *login, *website;
+    size_t n=0;
 
     switch(argc){
         case 3:
             ui->website = argv[2];
             printf("Website: %s\n", ui->website);
-            ui->login = malloc(BUFFER*sizeof(char)+sizeof(char));
             printf("Login: ");
-            scanf("%s", ui->login);
+            getline(&login, &n, stdin);
+            login[strcspn(login, "\n" )] = '\0';
+            ui->login = login;
             break;
         case 4:
             ui->website = argv[2];
@@ -160,12 +163,19 @@ void getUserInfo(int argc, char* argv[], struct user_info * ui){
             fprintf(stdout, "Login: %s\n", ui->login);
             break;
         default:
+
             printf("Website name: ");
-            ui->website = malloc(BUFFER*sizeof(char)+sizeof(char));
-            scanf("%s", ui->website);
+            getline(&website, &n, stdin);
+            website[strcspn(website, "\n" )] = '\0';
+
+            n=0;
             printf("Login: ");
-            ui->login = malloc(BUFFER*sizeof(char)+sizeof(char));
-            scanf("%s", ui->login);
+            getline(&login, &n, stdin);
+            login[strcspn(login, "\n" )] = '\0';
+
+            ui->website=website;
+            ui->login=login;
+
             break;
     }
 }
