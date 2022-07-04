@@ -23,7 +23,7 @@
 
 //#define REQUIRED_GPGME "1.12.0" //There's no method with minimum version spec for now
 
-#define VERSION "0.11.0"
+#define VERSION "0.12.0"
 
 #include <gpgme.h>
 #include <zconf.h>
