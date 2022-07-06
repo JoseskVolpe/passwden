@@ -36,6 +36,7 @@
 #include "configuration.h"
 #include "passfile.h"
 #include "crypt.h"
+#include <unistd.h>
 
 #define BOOL char
 #define TRUE 1
