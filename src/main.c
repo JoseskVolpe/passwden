@@ -146,7 +146,7 @@ typedef struct user_info{
 }user_info;
 void getUserInfo(int argc, char* argv[], struct user_info * ui){
 
-    char *login, *website;
+    char *login=NULL, *website=NULL;
     size_t n=0;
 
     switch(argc){
@@ -372,7 +372,7 @@ ssize_t my_getpass (char* message, char **lineptr)
 
 const char * askNewPassword(){
 
-    char *sec, *sec2;
+    char *sec=NULL, *sec2=NULL;
 
     INSERT_PASSWORD:{
         if(my_getpass("Password: ", &sec)<0)
