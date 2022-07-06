@@ -31,6 +31,7 @@
 #include "message.h"
 #include <stdlib.h>
 #include <string.h>
+#define _WITH_GETLINE
 #include <stdio.h>
 #include <json-c/json.h>
 #include "configuration.h"
