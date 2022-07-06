@@ -62,30 +62,33 @@ const char * decrypt(const char * src){
     dest = malloc(destal);
     gpgme_data_seek(plain, 0, SEEK_SET);
 
-    READ:
-    size_t bufsiz = gpgme_data_read(plain, &dest[offs], destal-offs);
-    if(bufsiz<0){
-        fprintf(stderr, GPGME_CIPHERTEXT_ERROR, destal, bufsiz);
+    READ:{
+        size_t bufsiz = gpgme_data_read(plain, &dest[offs], destal-offs);
+        if(bufsiz<0){
+            fprintf(stderr, GPGME_CIPHERTEXT_ERROR, destal, bufsiz);
+            exit(-1);
+        }
+        if(bufsiz+offs>=destal-sizeof(char)){
+            offs=bufsiz-1;
+            destal+=BUFFERSIZE*sizeof(char);
+            dest = (char *)realloc(dest, destal);
+            gpgme_data_seek(plain, bufsiz-sizeof(char), SEEK_SET);
+            goto READ;
+        }
+        goto FINAL;
+    }
+
+    ERROR:{
+        fprintf(stderr, GPGME_ERROR, gpgme_strerror(err));
         exit(-1);
     }
-    if(bufsiz+offs>=destal-sizeof(char)){
-        offs=bufsiz-1;
-        destal+=BUFFERSIZE*sizeof(char);
-        dest = (char *)realloc(dest, destal);
-        gpgme_data_seek(plain, bufsiz-sizeof(char), SEEK_SET);
-        goto READ;
+
+    FINAL:{
+        dest[destal-sizeof(char)]='\0';
+        gpgme_data_release(cipher);
+        gpgme_data_release(plain);
+        return dest;
     }
-    goto FINAL;
-
-    ERROR:
-    fprintf(stderr, GPGME_ERROR, gpgme_strerror(err));
-    exit(-1);
-
-    FINAL:
-    dest[destal-sizeof(char)]='\0';
-    gpgme_data_release(cipher);
-    gpgme_data_release(plain);
-    return dest;
 }
 
 const char * encrypt(const char * src, const char * fingerprint){
@@ -120,28 +123,31 @@ const char * encrypt(const char * src, const char * fingerprint){
     size_t destal = BUFFERSIZE*sizeof(char)+sizeof(char);
     unsigned long offs=0;
     dest = malloc(destal);
-    WRITE:
-    size_t bufsiz = gpgme_data_read(cipher, &dest[offs], destal-offs);
-    if(bufsiz<0){
-        fprintf(stderr, GPGME_CIPHERTEXT_ERROR, destal, bufsiz);
-        exit(-1);
-    }
-    if(bufsiz+offs>=destal-sizeof(char)){
-        offs=bufsiz-1;
-        destal+=BUFFERSIZE*sizeof(char);
-        dest = (char *)realloc(dest, destal);
-        gpgme_data_seek(cipher, bufsiz-sizeof(char), SEEK_SET);
-        goto WRITE;
+    WRITE:{
+        size_t bufsiz = gpgme_data_read(cipher, &dest[offs], destal-offs);
+        if(bufsiz<0){
+            fprintf(stderr, GPGME_CIPHERTEXT_ERROR, destal, bufsiz);
+            exit(-1);
+        }
+        if(bufsiz+offs>=destal-sizeof(char)){
+            offs=bufsiz-1;
+            destal+=BUFFERSIZE*sizeof(char);
+            dest = (char *)realloc(dest, destal);
+            gpgme_data_seek(cipher, bufsiz-sizeof(char), SEEK_SET);
+            goto WRITE;
+        }
     }
 
     goto FINAL;
 
-    ERROR:
-    fprintf(stderr, GPGME_ERROR, gpgme_strerror(err));
-    exit(-1);
+    ERROR:{
+        fprintf(stderr, GPGME_ERROR, gpgme_strerror(err));
+        exit(-1);
+    }
 
-    FINAL:
-    gpgme_data_release(cipher);
-    gpgme_data_release(plain);
-    return dest;
+    FINAL:{
+        gpgme_data_release(cipher);
+        gpgme_data_release(plain);
+        return dest;
+    }
 }

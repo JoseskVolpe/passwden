@@ -31,11 +31,13 @@
 #include "message.h"
 #include <stdlib.h>
 #include <string.h>
+#define _WITH_GETLINE
 #include <stdio.h>
 #include <json-c/json.h>
 #include "configuration.h"
 #include "passfile.h"
 #include "crypt.h"
+#include <unistd.h>
 
 #define BOOL char
 #define TRUE 1
@@ -144,11 +146,11 @@ typedef struct user_info{
 }user_info;
 void getUserInfo(int argc, char* argv[], struct user_info * ui){
 
-    char *login, *website;
+    char *login=NULL, *website=NULL;
     size_t n=0;
 
     switch(argc){
-        case 3:
+        case 3:{
             ui->website = argv[2];
             printf("Website: %s\n", ui->website);
             printf("Login: ");
@@ -156,13 +158,15 @@ void getUserInfo(int argc, char* argv[], struct user_info * ui){
             login[strcspn(login, "\n" )] = '\0';
             ui->login = login;
             break;
-        case 4:
+        }
+        case 4:{
             ui->website = argv[2];
             fprintf(stdout, "Website: %s\n", ui->website);
             ui->login = argv[3];
             fprintf(stdout, "Login: %s\n", ui->login);
             break;
-        default:
+        }
+        default:{
 
             printf("Website name: ");
             getline(&website, &n, stdin);
@@ -177,6 +181,7 @@ void getUserInfo(int argc, char* argv[], struct user_info * ui){
             ui->login=login;
 
             break;
+        }
     }
 }
 
@@ -207,7 +212,7 @@ const int removePassword(int argc, char* argv[]){
     char *website = argv[2], *login;
 
     switch(argc){
-        case 2:
+        case 2:{
             fprintf(stderr,
                 "At least a website must be specified\n"
                 "Usage:\n"
@@ -215,65 +220,75 @@ const int removePassword(int argc, char* argv[]){
                 app_name
             );
             return -1;
+        }
 
-        case 3:
-
-            goto WEBSITE_SEARCH;
-            AFT_WEB_SEARCH3:
-            printf("Delete ALL passwords for website \"%s\". ", website);
-            if(beSure()==FALSE){
-                printf("Operation canceled\n");
-                goto FINAL;
-            }
-
-            json_object_object_del(jobj, website);
-            if(update_passwords(jobj, iconf.fingerprint))
-                return -1;
-            printf("Website cleaned from database!\n");
-
-            return 0;
-
-        case 4:
+        case 3:{
 
             goto WEBSITE_SEARCH;
-            AFT_WEB_SEARCH4:
-            login = argv[3];
-            if(!json_object_object_get_ex(jweb, login, &jlogin)){
-                fprintf(stderr, "Login not registered\n");
-                return -1;
+            AFT_WEB_SEARCH3:{
+                printf("Delete ALL passwords for website \"%s\". ", website);
+                if(beSure()==FALSE){
+                    printf("Operation canceled\n");
+                    goto FINAL;
+                }
+
+                json_object_object_del(jobj, website);
+                if(update_passwords(jobj, iconf.fingerprint))
+                    return -1;
+                printf("Website cleaned from database!\n");
+
+                return 0;
             }
-            printf("Delete \"%s\" from \"%s\". ", login, website);
-            if(beSure()==FALSE){
-                printf("Operation canceled\n");
-                goto FINAL;
+        }
+
+        case 4:{
+
+            goto WEBSITE_SEARCH;
+            AFT_WEB_SEARCH4:{
+                login = argv[3];
+                if(!json_object_object_get_ex(jweb, login, &jlogin)){
+                    fprintf(stderr, "Login not registered\n");
+                    return -1;
+                }
+                printf("Delete \"%s\" from \"%s\". ", login, website);
+                if(beSure()==FALSE){
+                    printf("Operation canceled\n");
+                    goto FINAL;
+                }
+
+                json_object_object_del(jweb, login);
+                if(update_passwords(jobj, iconf.fingerprint))
+                    return -1;
+                printf("Login removed from database!\n");
+
+                return 0;
             }
+        }
 
-            json_object_object_del(jweb, login);
-            if(update_passwords(jobj, iconf.fingerprint))
-                return -1;
-            printf("Login removed from database!\n");
-
-            return 0;
-
-        default:
+        default:{
             invalidArguments(argc, argv, 4);
+        }
     }
 
-    WEBSITE_SEARCH:
-    jobj = get_passwords(iconf.fingerprint);
-    if(!json_object_object_get_ex(jobj, website, &jweb)){
-        fprintf(stderr, "Website not registered\n");
-        return -1;
-    }
-    switch(argc){
-        case 3:
-            goto AFT_WEB_SEARCH3;
-        case 4:
-            goto AFT_WEB_SEARCH4;
+    WEBSITE_SEARCH:{
+        jobj = get_passwords(iconf.fingerprint);
+        if(!json_object_object_get_ex(jobj, website, &jweb)){
+            fprintf(stderr, "Website not registered\n");
+            return -1;
+        }
+        switch(argc){
+            case 3:{
+                goto AFT_WEB_SEARCH3;
+            }
+            case 4:{
+                goto AFT_WEB_SEARCH4;
+            }
+        }
     }
 
-    FINAL:
-    return 0;
+    FINAL:{
+        return 0;
+    }
 }
 
 const int list(int argc, char* argv[]){
@@ -307,20 +322,22 @@ const int list(int argc, char* argv[]){
         json_object_iter_next(&jidw);
     } goto FINAL;
 
-    CHECK_WEBSITE:
-    printf("*%s:\n", website);
-    jidl = json_object_iter_begin(jlogin);
-    jidlEnd = json_object_iter_end(jlogin);
-    while(!json_object_iter_equal(&jidl, &jidlEnd)){
-        printf("    %s\n", json_object_iter_peek_name(&jidl));
-        json_object_iter_next(&jidl);
+    CHECK_WEBSITE:{
+        printf("*%s:\n", website);
+        jidl = json_object_iter_begin(jlogin);
+        jidlEnd = json_object_iter_end(jlogin);
+        while(!json_object_iter_equal(&jidl, &jidlEnd)){
+            printf("    %s\n", json_object_iter_peek_name(&jidl));
+            json_object_iter_next(&jidl);
+        }
+        printf("\n");
+        if(argc==2)
+            goto WEBSITE_ITERATION;
     }
-    printf("\n");
-    if(argc==2)
-        goto WEBSITE_ITERATION;
 
-    FINAL:
-    return 0;
+    FINAL:{
+        return 0;
+    }
 }
 
 /* Slighty copied from GNU. I've took so much time figuring out this so yiff off*/
@@ -355,14 +372,15 @@ ssize_t my_getpass (char* message, char **lineptr)
 
 const char * askNewPassword(){
 
-    char *sec, *sec2;
+    char *sec=NULL, *sec2=NULL;
 
-    INSERT_PASSWORD:
-    if(my_getpass("Password: ", &sec)<0)
-        exit(-1);
-    if(strlen(sec)<6){
-        fprintf(stderr, "Password or PIN must have at-least 6 characters\n");
-        goto INSERT_PASSWORD;
+    INSERT_PASSWORD:{
+        if(my_getpass("Password: ", &sec)<0)
+            exit(-1);
+        if(strlen(sec)<6){
+            fprintf(stderr, "Password or PIN must have at-least 6 characters\n");
+            goto INSERT_PASSWORD;
+        }
     }
 
     if(my_getpass("Confirm password: ", &sec2)<0)
@@ -407,7 +425,7 @@ const int checkArguments(int argc, char* argv[]){
 
 const int keyArgument(int argc, char* argv[]){
     switch(argc){
-            case 2: //Show key
+            case 2:{ //Show key
 
                 if(iconf.fingerprint==NULL || strlen(iconf.fingerprint)==0){
                     showKeyDefineHelp();
@@ -415,8 +433,9 @@ const int keyArgument(int argc, char* argv[]){
                 }
                 printf("Key fingerprint: %s\n", iconf.fingerprint);
                 return 0;
+            }
 
-            case 3:
+            case 3:{
 
                 if(strlen(argv[2])!=16){
                     fprintf(stderr, INVALID_FINGERPRINT_LENGTH_MESSAGE);
@@ -446,9 +465,11 @@ const int keyArgument(int argc, char* argv[]){
                 iconf.fingerprint = strdup(argv[2]); //TODO: Reencrypt passwords JSON
                 updateConfigFile(&iconf);
                 return 0;
+            }
 
-            default:
+            default:{
                 return invalidArguments(argc, argv, 3);
+            }
 
     }
 }
