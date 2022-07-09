@@ -528,7 +528,7 @@ const int invalidArguments(int argc, char* argv[], int index){
     return -1;
 }
 
-BOOL beSure(){
+const BOOL beSure(){
 
     struct termios new, old;
 
