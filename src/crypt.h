@@ -24,5 +24,5 @@
 #include <gpgme.h>
 
 void getCtx(gpgme_ctx_t *ctx);
-const char * decrypt(const int * src);
+const char * decrypt(const char * src);
 const int * encrypt(const char * src, const char * fingerprint);

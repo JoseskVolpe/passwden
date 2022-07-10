@@ -41,28 +41,28 @@ struct json_object * get_passwords(const char * fingerprint){
     const char *passfilepath = getPassFilePath();
 
     //Read file
-    int *buffer;
+    char *buffer;
     FILE *fd = fopen(passfilepath, "r");
 
     struct json_object *jobj;
 
-    unsigned long alloc = BUFFERSIZE*sizeof(int)+sizeof(int);
+    unsigned long alloc = BUFFERSIZE*sizeof(char)+sizeof(char);
     buffer=malloc(alloc);
     if(fd!=NULL) {
 
-        int c;
+        char c;
         unsigned long i;
         for(i=0; (c=getc(fd))!=EOF; i++){
             if (i>=(alloc/sizeof(char))-sizeof(char)){
                 alloc+=BUFFERSIZE*sizeof(char);
-                buffer = (int *)realloc(buffer, alloc);
+                buffer = (char *)realloc(buffer, alloc);
             }
-            buffer[i*sizeof(int)]=c;
+            buffer[i*sizeof(char)]=c;
         }
 
         fclose(fd);
 
-        buffer[alloc-sizeof(int)]='\0';
+        buffer[alloc-sizeof(char)]='\0';
         const char * bufferd = decrypt(buffer);
         jobj = json_tokener_parse(bufferd);
     }else{

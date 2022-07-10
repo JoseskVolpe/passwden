@@ -38,7 +38,7 @@ void getCtx(gpgme_ctx_t *ctx){
 
 }
 
-const char * decrypt(const int * src){
+const char * decrypt(const char * src){
     char *dest;
 
     gpgme_ctx_t ctx;
