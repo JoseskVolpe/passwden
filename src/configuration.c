@@ -63,14 +63,14 @@ const int checkConfigDir(){
     DIR *con_dir = opendir(con_loc); //Open directory
     if(ENOENT == errno){
         //Create configuration directory if it doesn't exist
-        if(mkdir(con_loc, S_IRWXU)!=0){
-            fprintf(stderr, "Error creating configuration directory %s", con_loc);
+        if(mkdir(con_loc, S_IRWXU)!=0 && errno!=EEXIST){
+            fprintf(stderr, "Error creating configuration directory %s (%d)", con_loc, errno);
             return -1;
         }
         closedir(con_dir);
         return 0;
     }else if(!con_loc){
-        fprintf(stderr, "Error accessing configuration directory %s", con_loc);
+        fprintf(stderr, "Error accessing configuration directory %s (%d)", con_loc, errno);
         return -1;
     }
 
