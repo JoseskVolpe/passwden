@@ -348,7 +348,7 @@ ssize_t my_getpass (char* message, char **lineptr)
 
     size_t n = 0;
 
-    printf(message);
+    printf("%s", message);
 
     /* Turn echoing off and fail if we can’t. */
     if (tcgetattr (fileno (stdin), &old) != 0)

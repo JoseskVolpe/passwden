@@ -50,14 +50,14 @@ struct json_object * get_passwords(const char * fingerprint){
     buffer=malloc(alloc);
     if(fd!=NULL) {
 
-        char c;
+        int c;
         unsigned long i;
         for(i=0; (c=getc(fd))!=EOF; i++){
             if (i>=(alloc/sizeof(char))-sizeof(char)){
                 alloc+=BUFFERSIZE*sizeof(char);
                 buffer = (char *)realloc(buffer, alloc);
             }
-            buffer[i*sizeof(char)]=c;
+            buffer[i*sizeof(char)]=(char)c;
         }
 
         fclose(fd);
@@ -87,7 +87,7 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
     if((f = fopen(passfilepath, "rw")) != NULL ){ //Backup
         bk = fopen(bk_path, "w");
 
-        char c;
+        int c;
         while((c = fgetc(f)) != EOF )
             fputc(c, bk);
 
@@ -99,7 +99,7 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
         f = fopen(passfilepath, "w");
     }
 
-    fprintf(f, enc);
+    fprintf(f, "%s", enc);
     fclose(f);
     chmod(passfilepath, strtol("0600", 0, 8));
 
