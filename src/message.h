@@ -26,5 +26,5 @@
  #define FINGERPRINT_NOT_DEFINED "You must choose your private key fingerprint first. Use: \n%s --key <FINGERPRINT>\nWith GnuPG, you may find your fingerprints by using:\ngpg --list-secret-keys --keyid-format=long\n"
  #define GPGME_VERSION_OUTDATED "gpgme required version is %s, you got %s. Please, update it\n"
  #define GPGME_ERROR "gpgme error %s, exiting...\n"
- #define GPGME_CIPHERTEXT_ERROR "Error reading ciphertext\nMax buffer is %d, got %d\n"
+ #define GPGME_CIPHERTEXT_ERROR "Error reading ciphertext\nMax buffer is %lu, got %lu\n"
  #define ERROR_REENCRYPTING_FILE_MESSAGE "Couldn't reencrypt passwords, fingerprint apply cancelled.\nPlease, check you still have your old private key\n"
