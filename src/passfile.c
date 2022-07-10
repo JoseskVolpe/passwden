@@ -99,7 +99,7 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
         f = fopen(passfilepath, "w");
     }
 
-    fprintf(f, enc);
+    fprintf(f, "%s", enc);
     fclose(f);
     chmod(passfilepath, strtol("0600", 0, 8));
 
