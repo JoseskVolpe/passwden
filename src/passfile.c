@@ -41,12 +41,12 @@ struct json_object * get_passwords(const char * fingerprint){
     const char *passfilepath = getPassFilePath();
 
     //Read file
-    char *buffer;
+    int *buffer;
     FILE *fd = fopen(passfilepath, "r");
 
     struct json_object *jobj;
 
-    unsigned long alloc = BUFFERSIZE*sizeof(char)+sizeof(char);
+    unsigned long alloc = BUFFERSIZE*sizeof(int)+sizeof(int);
     buffer=malloc(alloc);
     if(fd!=NULL) {
 
@@ -55,14 +55,14 @@ struct json_object * get_passwords(const char * fingerprint){
         for(i=0; (c=getc(fd))!=EOF; i++){
             if (i>=(alloc/sizeof(char))-sizeof(char)){
                 alloc+=BUFFERSIZE*sizeof(char);
-                buffer = (char *)realloc(buffer, alloc);
+                buffer = (int *)realloc(buffer, alloc);
             }
-            buffer[i*sizeof(char)]=(char)c;
+            buffer[i*sizeof(int)]=c;
         }
 
         fclose(fd);
 
-        buffer[alloc-sizeof(char)]='\0';
+        buffer[alloc-sizeof(int)]='\0';
         const char * bufferd = decrypt(buffer);
         jobj = json_tokener_parse(bufferd);
     }else{
@@ -82,7 +82,7 @@ const int update_passwords(struct json_object *jobj, const char * fingerprint){
     strcpy(bk_path, passfilepath);
     strcat(bk_path, ".bk");
 
-    const char *enc = encrypt(json_object_get_string(jobj), fingerprint);
+    const int *enc = encrypt(json_object_get_string(jobj), fingerprint);
 
     if((f = fopen(passfilepath, "rw")) != NULL ){ //Backup
         bk = fopen(bk_path, "w");

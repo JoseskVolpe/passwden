@@ -38,7 +38,7 @@ void getCtx(gpgme_ctx_t *ctx){
 
 }
 
-const char * decrypt(const char * src){
+const char * decrypt(const int * src){
     char *dest;
 
     gpgme_ctx_t ctx;
@@ -91,9 +91,9 @@ const char * decrypt(const char * src){
     }
 }
 
-const char * encrypt(const char * src, const char * fingerprint){
+const int * encrypt(const char * src, const char * fingerprint){
 
-    char *dest;
+    int *dest;
 
     gpgme_ctx_t ctx;
     gpgme_key_t key;
@@ -120,7 +120,7 @@ const char * encrypt(const char * src, const char * fingerprint){
     gpgme_release(ctx);
 
     gpgme_data_seek(cipher, 0, SEEK_SET);
-    size_t destal = BUFFERSIZE*sizeof(char)+sizeof(char);
+    size_t destal = BUFFERSIZE*sizeof(int)+sizeof(int);
     unsigned long offs=0;
     dest = malloc(destal);
     WRITE:{
@@ -129,11 +129,11 @@ const char * encrypt(const char * src, const char * fingerprint){
             fprintf(stderr, GPGME_CIPHERTEXT_ERROR, destal, bufsiz);
             exit(-1);
         }
-        if(bufsiz+offs>=destal-sizeof(char)){
+        if(bufsiz+offs>=destal-sizeof(int)){
             offs=bufsiz-1;
-            destal+=BUFFERSIZE*sizeof(char);
-            dest = (char *)realloc(dest, destal);
-            gpgme_data_seek(cipher, bufsiz-sizeof(char), SEEK_SET);
+            destal+=BUFFERSIZE*sizeof(int);
+            dest = (int *)realloc(dest, destal);
+            gpgme_data_seek(cipher, bufsiz-sizeof(int), SEEK_SET);
             goto WRITE;
         }
     }
