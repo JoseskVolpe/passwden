@@ -23,7 +23,7 @@
 
 //#define REQUIRED_GPGME "1.12.0" //There's no method with minimum version spec for now
 
-#define VERSION "0.12.1"
+#define VERSION "0.12.2"
 
 #include <gpgme.h>
 #include <zconf.h>
@@ -348,7 +348,7 @@ ssize_t my_getpass (char* message, char **lineptr)
 
     size_t n = 0;
 
-    printf(message);
+    printf("%s", message);
 
     /* Turn echoing off and fail if we can’t. */
     if (tcgetattr (fileno (stdin), &old) != 0)
